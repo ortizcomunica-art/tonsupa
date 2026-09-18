@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departamento en Alquiler - Tonsupa | Conjunto Salaberry 3</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            navy: '#023E7D',    /* Azul Marino */
+                            blue: '#0077B6',    /* Azul Océano */
+                            lightBlue: '#E8F1F5',
+                            orange: '#FF7B00',  /* Naranja */
+                            yellow: '#FFD166',  /* Amarillo CTA */
+                            green: '#25D366'    /* WhatsApp */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .banner-badge {
+            background: linear-gradient(90deg, #FF7B00 0%, #FFD166 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased pb-24 sm:pb-0">
+
+    <!-- Top Announcement Bar -->
+    <div class="banner-badge text-slate-900 font-extrabold text-xs sm:text-sm py-2 px-4 text-center tracking-wide shadow-sm flex items-center justify-between max-w-6xl mx-auto rounded-b-xl">
+        <div class="flex items-center gap-2 mx-auto">
+            <i data-lucide="sparkles" class="w-4 h-4 text-slate-900"></i>
+            <span>¡TUS VACACIONES SOÑADAS EN TONSUPA! • SECTOR CLUB PACÍFICO</span>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="toggleAsesorModal()" class="text-[11px] bg-brand-navy text-white font-bold px-2.5 py-1 rounded-lg hover:bg-slate-800 transition shrink-0 hidden sm:flex items-center gap-1">
+                <i data-lucide="briefcase" class="w-3 h-3 text-brand-yellow"></i> Asesores
+            </button>
+            <button onclick="toggleAdminView()" class="text-[11px] bg-slate-900 text-white font-bold px-2.5 py-1 rounded-lg hover:bg-slate-800 transition shrink-0 hidden sm:flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3 h-3 text-brand-yellow"></i>
+                <span id="adminBtnText">Panel Dueña</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-brand-navy p-2 rounded-xl text-white">
+                    <i data-lucide="palmtree" class="w-5 h-5 text-brand-yellow"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-base sm:text-lg tracking-tight text-brand-navy block leading-tight">
+                        Salaberry 3 <span class="text-brand-orange">Tonsupa</span>
+                    </span>
+                    <span class="text-[10px] text-slate-500 font-semibold">Playa • Ecuador</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="toggleAsesorModal()" class="sm:hidden text-xs bg-brand-orange text-white font-bold px-2.5 py-1.5 rounded-lg">
+                    Briefcase
+                </button>
+                <button onclick="toggleAdminView()" class="sm:hidden text-xs bg-brand-navy text-white font-bold px-2.5 py-1.5 rounded-lg">
+                    🔒 Admin
+                </button>
+                <a href="https://wa.me/593983209484" target="_blank" class="hidden sm:flex items-center gap-2 bg-brand-green hover:bg-emerald-600 text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-md transition transform hover:-translate-y-0.5">
+                    <i data-lucide="phone" class="w-4 h-4"></i>
+                    <span>0983 209 484</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- VISTA PÚBLICA / CLIENTES -->
+    <div id="publicView">
+        <section class="relative bg-brand-navy text-white overflow-hidden">
+            <div class="max-w-6xl mx-auto px-4 py-8 sm:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-6 text-center lg:text-left space-y-4">
+                    <span class="inline-flex items-center gap-1.5 bg-brand-yellow text-brand-navy font-black px-4 py-1.5 rounded-full text-xs uppercase tracking-wider shadow-md">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> A pocas cuadras de la playa • 3er Piso
+                    </span>
+                    <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight uppercase">
+                        DEPARTAMENTO EN ALQUILER
+                    </h1>
+                    <p class="text-brand-yellow font-extrabold text-xl sm:text-2xl italic">
+                        ¡Tu espacio ideal para disfrutar del mar!
+                    </p>
+                    <p class="text-slate-200 text-sm sm:text-base font-medium max-w-xl mx-auto lg:mx-0">
+                        Disfruta la playa, el descanso y la comodidad en una zona segura y tranquila. Capacidad perfecta para hasta 8 personas.
+                    </p>
+                    <div class="flex flex-wrap justify-center lg:justify-start gap-2 pt-2 text-xs font-bold">
+                        <span class="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                            <i data-lucide="users" class="w-4 h-4 text-brand-yellow"></i> Máx. 8 Personas
+                        </span>
+                        <span class="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                            <i data-lucide="waves" class="w-4 h-4 text-brand-yellow"></i> Piscina
+                        </span>
+                        <span class="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                            <i data-lucide="wifi" class="w-4 h-4 text-brand-yellow"></i> WiFi
+                        </span>
+                        <span class="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                            <i data-lucide="car" class="w-4 h-4 text-brand-yellow"></i> Parqueadero
+                        </span>
+                    </div>
+                </div>
+                <div class="lg:col-span-6">
+                    <div class="relative w-full aspect-video rounded-3xl overflow-hidden bg-slate-900 border-2 border-brand-yellow/50 shadow-2xl pointer-events-none">
+                        <iframe src="https://drive.google.com/file/d/1R5CScVxPN0yy-MpK2pItMzRVjrh8ItI-/preview?autoplay=1" class="w-full h-full scale-105 pointer-events-none" allow="autoplay"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <main class="max-w-6xl mx-auto px-4 mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-8">
+                <!-- CARRUSEL -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-black text-brand-navy flex items-center gap-2">
+                            <i data-lucide="images" class="w-5 h-5 text-brand-orange"></i> Galería de Fotos Reales
+                        </h2>
+                        <span class="text-xs font-bold text-slate-400">Rotación automática activada</span>
+                    </div>
+                    <div class="relative rounded-2xl overflow-hidden shadow-lg group bg-slate-900 h-72 sm:h-96">
+                        <img id="carouselSlide" src="https://lh3.googleusercontent.com/d/1WkohIHRWrvmno27H2OZThvSwtxD6r1Qj" class="w-full h-full object-cover transition-all duration-700" alt="Departamento Tonsupa">
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/40 to-transparent p-4 text-white">
+                            <p id="carouselCaption" class="font-bold text-sm sm:text-base text-brand-yellow">Fachada Principal y Piscina - Conjunto Salaberry 3</p>
+                        </div>
+                        <button onclick="manualPrevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 bg-brand-navy/80 hover:bg-brand-orange text-white p-2.5 rounded-full backdrop-blur-md transition shadow-md z-10">
+                            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                        </button>
+                        <button onclick="manualNextSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-brand-navy/80 hover:bg-brand-orange text-white p-2.5 rounded-full backdrop-blur-md transition shadow-md z-10">
+                            <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                    <div class="flex justify-center gap-2 mt-4" id="carouselDots"></div>
+                </div>
+
+                <!-- CALENDARIO -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-md">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                        <div>
+                            <h2 class="text-xl font-black text-brand-navy flex items-center gap-2">
+                                <i data-lucide="calendar-range" class="w-5 h-5 text-brand-orange"></i> Calendario de Ocupación
+                            </h2>
+                            <div class="flex items-center gap-3 mt-1">
+                                <button onclick="changeMonth(-1)" class="p-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition">
+                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                </button>
+                                <p id="calendarMonthYear" class="text-sm font-extrabold text-brand-orange uppercase tracking-wide">Cargando...</p>
+                                <button onclick="changeMonth(1)" class="p-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition">
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 text-xs font-bold">
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 bg-emerald-500 rounded-full inline-block"></span> Disponible</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 bg-rose-500 rounded-full inline-block"></span> Ocupado</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div class="grid grid-cols-7 gap-2 text-center text-xs font-extrabold text-slate-500 mb-2">
+                            <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+                        </div>
+                        <div class="grid grid-cols-7 gap-2 text-xs font-bold text-center" id="calendarDays"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORMULARIO CHECKOUT -->
+            <div class="lg:col-span-1">
+                <div class="bg-white p-6 rounded-3xl border-2 border-brand-orange/30 shadow-xl sticky top-20">
+                    <div class="bg-brand-navy text-white -mx-6 -mt-6 p-4 rounded-t-3xl mb-4 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-brand-yellow uppercase tracking-wider block">Checkout & Reserva</span>
+                            <h3 class="text-lg font-black">Consulta tu Estancia</h3>
+                        </div>
+                        <i data-lucide="credit-card" class="w-6 h-6 text-brand-yellow"></i>
+                    </div>
+
+                    <form id="bookingForm" class="space-y-4" onsubmit="event.preventDefault(); sendWhatsApp();">
+                        <div>
+                            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">Nombre Completo</label>
+                            <input type="text" id="clientName" required placeholder="Ej. Carlos Mendoza" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:outline-none text-sm font-semibold text-slate-800">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">Cédula o Pasaporte</label>
+                            <input type="text" id="clientId" required placeholder="Ej. 1723456789" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:outline-none text-sm font-semibold text-slate-800">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-700 mb-1">Fecha Entrada</label>
+                                <input type="date" id="checkin" required onchange="validateDates()" class="w-full px-2 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-700 mb-1">Fecha Salida</label>
+                                <input type="date" id="checkout" required onchange="validateDates()" class="w-full px-2 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800">
+                            </div>
+                        </div>
+                        <p id="dateError" class="text-[11px] font-bold text-rose-600 hidden"></p>
+
+                        <div>
+                            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">Huéspedes (Máx. 8)</label>
+                            <select id="guests" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800">
+                                <option value="1 a 3 personas">1 a 3 personas</option>
+                                <option value="4 a 6 personas">4 a 6 personas</option>
+                                <option value="7 a 8 personas (Capacidad Máxima)">7 a 8 personas (Capacidad Máxima)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">Código de Asesor / Descuento</label>
+                            <div class="relative">
+                                <input type="text" id="promoCode" placeholder="Ej. ASESOR10" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-orange focus:outline-none text-xs font-bold text-brand-navy uppercase">
+                                <i data-lucide="tag" class="w-4 h-4 text-slate-400 absolute right-3 top-2.5"></i>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100">
+                            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-2">Opción de Pago</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 flex items-center gap-2 hover:bg-slate-50">
+                                    <input type="radio" name="paymentMethod" value="Transferencia Bancaria" checked class="text-brand-blue">
+                                    <span class="text-xs font-bold text-slate-700">Transferencia</span>
+                                </label>
+                                <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 flex items-center gap-2 hover:bg-slate-50">
+                                    <input type="radio" name="paymentMethod" value="Tarjeta de Crédito/Débito" class="text-brand-blue">
+                                    <span class="text-xs font-bold text-slate-700">Tarjeta</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btnSubmit" class="w-full bg-brand-yellow hover:bg-yellow-400 text-slate-900 font-black py-3.5 px-4 rounded-2xl shadow-lg transition duration-200 flex items-center justify-center gap-2 transform active:scale-95 text-sm uppercase">
+                            <i data-lucide="send" class="w-5 h-5 text-slate-900"></i>
+                            <span>Solicitar Reserva por WhatsApp</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- VISTA PRIVADA: PANEL DE LA DUEÑA -->
+    <div id="adminView" class="hidden max-w-6xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-3xl border-2 border-brand-navy shadow-2xl p-6 sm:p-8">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-6">
+                <div>
+                    <span class="bg-brand-orange/10 text-brand-orange text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                        Panel de Control Exclusivo
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-brand-navy mt-1 flex items-center gap-2">
+                        <i data-lucide="layout-dashboard" class="w-7 h-7 text-brand-orange"></i> Gestión de Reservaciones
+                    </h2>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <!-- BOTÓN DESCARGAR EXCEL / CSV -->
+                    <button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-4 py-2 rounded-xl text-xs flex items-center gap-2 transition shadow-md">
+                        <i data-lucide="download" class="w-4 h-4"></i> Descargar Excel (CSV)
+                    </button>
+                    <button onclick="toggleAdminView()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold px-4 py-2 rounded-xl text-xs flex items-center gap-2 transition">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
+                <div class="bg-brand-lightBlue p-4 rounded-2xl border border-brand-blue/20">
+                    <span class="text-xs font-bold text-brand-blue uppercase">Pendientes</span>
+                    <p id="statPending" class="text-2xl font-black text-brand-navy mt-1">0</p>
+                </div>
+                <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200">
+                    <span class="text-xs font-bold text-emerald-700 uppercase">Aprobadas</span>
+                    <p id="statApproved" class="text-2xl font-black text-emerald-800 mt-1">0</p>
+                </div>
+                <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200">
+                    <span class="text-xs font-bold text-amber-700 uppercase">Total Recaudado</span>
+                    <p id="statTotal" class="text-2xl font-black text-amber-900 mt-1">$0.00</p>
+                </div>
+            </div>
+
+            <!-- TABLA DE CONTROL -->
+            <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-brand-navy text-white uppercase text-[11px] font-black tracking-wider">
+                            <th class="p-3.5">Huésped / CI</th>
+                            <th class="p-3.5">Fechas</th>
+                            <th class="p-3.5">Asesor</th>
+                            <th class="p-3.5">Pago / Valor</th>
+                            <th class="p-3.5">Comprobante</th>
+                            <th class="p-3.5">Estado</th>
+                            <th class="p-3.5 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsTableBody" class="divide-y divide-slate-200 font-semibold text-slate-700 bg-white">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE REGISTRO PARA ASESORES -->
+    <div id="asesorModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 border-2 border-brand-orange">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-black text-brand-navy text-lg flex items-center gap-2">
+                    <i data-lucide="briefcase" class="w-5 h-5 text-brand-orange"></i> Portal Asesores Commerciales
+                </h3>
+                <button onclick="toggleAsesorModal()" class="text-slate-400 hover:text-slate-700 font-bold text-sm">✕ Cerrar</button>
+            </div>
+            
+            <form id="asesorForm" class="space-y-3" onsubmit="event.preventDefault(); submitAsesorBooking();">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Tu Código de Asesor</label>
+                    <input type="text" id="asCode" required placeholder="Ej. ASESOR10" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-bold uppercase">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Huésped</label>
+                    <input type="text" id="asName" required placeholder="Nombre y Apellido" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-semibold">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-700 mb-1">Entrada</label>
+                        <input type="date" id="asCheckin" required class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-700 mb-1">Salida</label>
+                        <input type="date" id="asCheckout" required class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-semibold">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Monto Acordado ($)</label>
+                    <input type="number" id="asAmount" required placeholder="150.00" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-bold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Adjuntar Comprobante de Pago (Simulado URL)</label>
+                    <input type="url" id="asReceipt" placeholder="https://enlace-imagen-transferencia.com" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-semibold">
+                </div>
+                <button type="submit" class="w-full bg-brand-orange text-white font-black py-3 rounded-xl text-xs uppercase shadow-md">
+                    Registrar Reserva de Asesor
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script de Lógica -->
+    <script>
+        lucide.createIcons();
+
+        const ADMIN_PASSWORD = "1234";
+        const ASESOR_PASSWORD = "ASESOR";
+        let isAdminLoggedIn = false;
+
+        /* PERSISTENCIA EN LOCALSTORAGE */
+        let reservationsStore = JSON.parse(localStorage.getItem('tonsupa_reservations')) || [
+            {
+                id: 1,
+                clientName: "Carlos Mendoza",
+                clientId: "1723456789",
+                checkin: "2026-09-04",
+                checkout: "2026-09-06",
+                guests: "4 a 6 personas",
+                promoCode: "ASESOR10",
+                paymentMethod: "Transferencia Bancaria",
+                amount: 160.00,
+                receiptUrl: "https://lh3.googleusercontent.com/d/1ANysBZ7r4XpnJdrSLBOuLPq6BxcgCgNb",
+                status: "Aprobado"
+            }
+        ];
+
+        function saveToLocalStorage() {
+            localStorage.setItem('tonsupa_reservations', JSON.stringify(reservationsStore));
+        }
+
+        /* RENDER DE TABLA DE RESERVAS */
+        function renderReservationsTable() {
+            const tbody = document.getElementById('reservationsTableBody');
+            let html = '';
+            let countPending = 0;
+            let countApproved = 0;
+            let totalMoney = 0;
+
+            reservationsStore.forEach(res => {
+                if (res.status === 'Pendiente') countPending++;
+                if (res.status === 'Aprobado') {
+                    countApproved++;
+                    totalMoney += parseFloat(res.amount);
+                }
+
+                let badgeColor = "bg-amber-100 text-amber-800 border-amber-300";
+                if (res.status === 'Aprobado') badgeColor = "bg-emerald-100 text-emerald-800 border-emerald-300";
+                if (res.status === 'Rechazado') badgeColor = "bg-rose-100 text-rose-800 border-rose-300";
+
+                html += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3.5">
+                            <div class="font-extrabold text-slate-900">${res.clientName}</div>
+                            <div class="text-[10px] text-slate-500">C.I: ${res.clientId || 'N/A'}</div>
+                        </td>
+                        <td class="p-3.5 whitespace-nowrap">
+                            <div class="text-brand-navy font-bold">${res.checkin}</div>
+                            <div class="text-[10px] text-slate-500">al ${res.checkout}</div>
+                        </td>
+                        <td class="p-3.5">
+                            <span class="bg-brand-navy/10 text-brand-navy px-2 py-0.5 rounded-md font-bold text-[10px]">${res.promoCode}</span>
+                        </td>
+                        <td class="p-3.5">
+                            <div class="font-black text-slate-900">$${parseFloat(res.amount).toFixed(2)}</div>
+                            <div class="text-[10px] text-slate-500">${res.paymentMethod}</div>
+                        </td>
+                        <td class="p-3.5">
+                            ${res.receiptUrl && res.receiptUrl !== '#' ? `<a href="${res.receiptUrl}" target="_blank" class="inline-flex items-center gap-1 text-brand-blue hover:underline font-bold text-[11px]"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> Ver Comprobante</a>` : '<span class="text-slate-400">Sin archivo</span>'}
+                        </td>
+                        <td class="p-3.5">
+                            <span class="border px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${badgeColor}">
+                                ${res.status}
+                            </span>
+                        </td>
+                        <td class="p-3.5 text-center">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="updateReservationStatus(${res.id}, 'Aprobado')" title="Aprobar Pago y Bloquear Fecha" class="bg-emerald-600 hover:bg-emerald-700 text-white p-1.5 rounded-lg transition shadow-sm">
+                                    <i data-lucide="check" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="updateReservationStatus(${res.id}, 'Rechazado')" title="Denegar y Liberar Fecha" class="bg-rose-600 hover:bg-rose-700 text-white p-1.5 rounded-lg transition shadow-sm">
+                                    <i data-lucide="x" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+            document.getElementById('statPending').innerText = countPending;
+            document.getElementById('statApproved').innerText = countApproved;
+            document.getElementById('statTotal').innerText = `$${totalMoney.toFixed(2)}`;
+            
+            lucide.createIcons();
+            syncCalendarWithReservations();
+        }
+
+        function updateReservationStatus(resId, newStatus) {
+            const reservation = reservationsStore.find(r => r.id === resId);
+            if (reservation) {
+                reservation.status = newStatus;
+                saveToLocalStorage();
+                renderReservationsTable();
+            }
+        }
+
+        /* EXPORTAR A EXCEL (CSV) */
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "ID,Cliente,Cedula,Entrada,Salida,Huespedes,CodigoAsesor,MetodoPago,Monto,Estado\n";
+
+            reservationsStore.forEach(r => {
+                csvContent += `${r.id},"${r.clientName}","${r.clientId}",${r.checkin},${r.checkout},"${r.guests}","${r.promoCode}","${r.paymentMethod}",${r.amount},${r.status}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Reservas_Tonsupa_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        /* CAMBIO DE VISTAS */
+        function toggleAdminView() {
+            if (!isAdminLoggedIn) {
+                const pass = prompt("Clave de administración:");
+                if (pass === ADMIN_PASSWORD) {
+                    isAdminLoggedIn = true;
+                } else {
+                    if (pass !== null) alert("Clave incorrecta.");
+                    return;
+                }
+            }
+
+            const publicDiv = document.getElementById('publicView');
+            const adminDiv = document.getElementById('adminView');
+            const btnText = document.getElementById('adminBtnText');
+
+            if (adminDiv.classList.contains('hidden')) {
+                publicDiv.classList.add('hidden');
+                adminDiv.classList.remove('hidden');
+                btnText.innerText = "Ver Web";
+                renderReservationsTable();
+            } else {
+                adminDiv.classList.add('hidden');
+                publicDiv.classList.remove('hidden');
+                btnText.innerText = "Panel Dueña";
+            }
+        }
+
+        function toggleAsesorModal() {
+            const modal = document.getElementById('asesorModal');
+            if (modal.classList.contains('hidden')) {
+                const pass = prompt("Clave de acceso para Asesores:");
+                if (pass === ASESOR_PASSWORD) {
+                    modal.classList.remove('hidden');
+                } else if (pass !== null) {
+                    alert("Clave invalida de Asesor.");
+                }
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function submitAsesorBooking() {
+            const code = document.getElementById('asCode').value;
+            const name = document.getElementById('asName').value;
+            const checkin = document.getElementById('asCheckin').value;
+            const checkout = document.getElementById('asCheckout').value;
+            const amount = document.getElementById('asAmount').value;
+            const receipt = document.getElementById('asReceipt').value || "#";
+
+            const newRes = {
+                id: Date.now(),
+                clientName: name,
+                clientId: "Cargado por Asesor",
+                checkin: checkin,
+                checkout: checkout,
+                guests: "Grupo registrado",
+                promoCode: code.toUpperCase(),
+                paymentMethod: "Transferencia / Depósito",
+                amount: parseFloat(amount),
+                receiptUrl: receipt,
+                status: "Pendiente"
+            };
+
+            reservationsStore.push(newRes);
+            saveToLocalStorage();
+            alert("✅ Reserva registrada por Asesor. La dueña verificará el comprobante en su panel.");
+            toggleAsesorModal();
+            renderReservationsTable();
+        }
+
+        /* SINCRONIZACIÓN DE CALENDARIO */
+        function syncCalendarWithReservations() {
+            bookedDatesStore = {};
+
+            reservationsStore.forEach(res => {
+                if (res.status === 'Aprobado') {
+                    const checkinDate = new Date(res.checkin + 'T00:00:00');
+                    const checkoutDate = new Date(res.checkout + 'T00:00:00');
+
+                    const year = checkinDate.getFullYear();
+                    const month = checkinDate.getMonth();
+                    const key = `${year}-${month}`;
+
+                    if (!bookedDatesStore[key]) bookedDatesStore[key] = [];
+
+                    for (let d = checkinDate.getDate(); d <= checkoutDate.getDate(); d++) {
+                        if (!bookedDatesStore[key].includes(d)) {
+                            bookedDatesStore[key].push(d);
+                        }
+                    }
+                }
+            });
+
+            renderCalendar();
+        }
+
+        /* CARRUSEL Y CALENDARIO INTERACTIVO */
+        const slides = [
+            { url: 'https://lh3.googleusercontent.com/d/1WkohIHRWrvmno27H2OZThvSwtxD6r1Qj', caption: 'Fachada Principal y Piscina - Conjunto Salaberry 3' },
+            { url: 'https://lh3.googleusercontent.com/d/1xJ8uhe0eIF9YCFTPlDVhiY8qZvmWyRGF', caption: 'Dormitorio Master' },
+            { url: 'https://lh3.googleusercontent.com/d/1eJSBN2p62ER-CpvBfk2LzfXBW-qaW6xQ', caption: 'Habitación Familiar' },
+            { url: 'https://lh3.googleusercontent.com/d/1C4G7h_6uJPLEPEC1YcXS2osCGTlOir_H', caption: 'Cocina Equipada' }
+        ];
+
+        let currentIndex = 0;
+        let autoScrollTimer = null;
+
+        function updateSlide() {
+            const imgEl = document.getElementById('carouselSlide');
+            const capEl = document.getElementById('carouselCaption');
+            if (imgEl && capEl) {
+                imgEl.src = slides[currentIndex].url;
+                capEl.innerText = slides[currentIndex].caption;
+                renderDots();
+            }
+        }
+
+        function nextSlide() { currentIndex = (currentIndex + 1) % slides.length; updateSlide(); }
+        function prevSlide() { currentIndex = (currentIndex - 1 + slides.length) % slides.length; updateSlide(); }
+        function manualNextSlide() { nextSlide(); resetAutoScroll(); }
+        function manualPrevSlide() { prevSlide(); resetAutoScroll(); }
+        function startAutoScroll() { autoScrollTimer = setInterval(nextSlide, 2500); }
+        function resetAutoScroll() { clearInterval(autoScrollTimer); startAutoScroll(); }
+
+        function renderDots() {
+            const dotsContainer = document.getElementById('carouselDots');
+            if (dotsContainer) {
+                dotsContainer.innerHTML = slides.map((_, idx) => `
+                    <button onclick="currentIndex=${idx};updateSlide();resetAutoScroll();" class="w-3 h-3 rounded-full transition ${idx === currentIndex ? 'bg-brand-orange scale-110' : 'bg-slate-300'}"></button>
+                `).join('');
+            }
+        }
+
+        renderDots();
+        startAutoScroll();
+
+        let currentCalDate = new Date();
+        let bookedDatesStore = {};
+
+        function renderCalendar() {
+            const year = currentCalDate.getFullYear();
+            const month = currentCalDate.getMonth();
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+            const monthEl = document.getElementById('calendarMonthYear');
+            if (monthEl) monthEl.innerText = `${monthNames[month]} ${year}`;
+
+            let firstDayIndex = new Date(year, month, 1).getDay();
+            firstDayIndex = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysContainer = document.getElementById('calendarDays');
+            const key = `${year}-${month}`;
+            const bookedForMonth = bookedDatesStore[key] || [];
+
+            let htmlDays = '';
+            for (let empty = 0; empty < firstDayIndex; empty++) htmlDays += `<span></span>`;
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                if (bookedForMonth.includes(i)) {
+                    htmlDays += `<span class="p-2 rounded-lg bg-rose-100 text-rose-800 line-through font-bold">${i}</span>`;
+                } else {
+                    htmlDays += `<span class="p-2 rounded-lg bg-emerald-100 text-emerald-800 font-bold">${i}</span>`;
+                }
+            }
+            if (daysContainer) daysContainer.innerHTML = htmlDays;
+
+            const todayFormatted = new Date().toISOString().split('T')[0];
+            if (document.getElementById('checkin')) document.getElementById('checkin').min = todayFormatted;
+            if (document.getElementById('checkout')) document.getElementById('checkout').min = todayFormatted;
+        }
+
+        function changeMonth(direction) {
+            currentCalDate.setMonth(currentCalDate.getMonth() + direction);
+            renderCalendar();
+        }
+
+        function validateDates() {
+            const checkinVal = document.getElementById('checkin').value;
+            const checkoutVal = document.getElementById('checkout').value;
+            const errorEl = document.getElementById('dateError');
+            const btnSubmit = document.getElementById('btnSubmit');
+
+            errorEl.classList.add('hidden');
+            btnSubmit.disabled = false;
+            btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            if (!checkinVal || !checkoutVal) return;
+
+            const checkinDate = new Date(checkinVal + 'T00:00:00');
+            const checkoutDate = new Date(checkoutVal + 'T00:00:00');
+
+            if (checkoutDate <= checkinDate) {
+                errorEl.innerText = "❌ La fecha de salida debe ser posterior a la fecha de entrada.";
+                errorEl.classList.remove('hidden');
+                btnSubmit.disabled = true;
+                btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            const key = `${checkinDate.getFullYear()}-${checkinDate.getMonth()}`;
+            const bookedForMonth = bookedDatesStore[key] || [];
+
+            for (let d = checkinDate.getDate(); d <= checkoutDate.getDate(); d++) {
+                if (bookedForMonth.includes(d)) {
+                    errorEl.innerText = `❌ El día ${d} está ocupado. Elige otro rango de fechas.`;
+                    errorEl.classList.remove('hidden');
+                    btnSubmit.disabled = true;
+                    btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
+                    return;
+                }
+            }
+        }
+
+        function sendWhatsApp() {
+            const name = document.getElementById('clientName').value;
+            const id = document.getElementById('clientId').value;
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+            const guests = document.getElementById('guests').value;
+            const promoCode = document.getElementById('promoCode').value || "DIRECTO";
+            const payment = document.querySelector('input[name="paymentMethod"]:checked').value;
+            const phone = "593983209484";
+
+            const newRes = {
+                id: Date.now(),
+                clientName: name,
+                clientId: id,
+                checkin: checkin,
+                checkout: checkout,
+                guests: guests,
+                promoCode: promoCode.toUpperCase(),
+                paymentMethod: payment,
+                amount: 150.00,
+                receiptUrl: "#",
+                status: "Pendiente"
+            };
+
+            reservationsStore.push(newRes);
+            saveToLocalStorage();
+
+            let message = `🏖️ *SOLICITUD DE RESERVA VACACIONAL*%0A`;
+            message += `-----------------------------------%0A`;
+            message += `🏠 *Lugar:* Depto. Tonsupa (Salaberry 3)%0A`;
+            message += `👤 *Huésped:* ${name}%0A`;
+            message += `🪪 *C.I/Pasaporte:* ${id}%0A`;
+            message += `📅 *Llegada:* ${checkin}%0A`;
+            message += `📅 *Salida:* ${checkout}%0A`;
+            message += `👥 *Huéspedes:* ${guests}%0A`;
+            message += `🏷️ *Código Asesor:* ${promoCode}%0A`;
+            message += `💳 *Pago:* ${payment}%0A`;
+            message += `-----------------------------------%0A`;
+            message += `✨ _Hola, solicito confirmar la disponibilidad y enviarme los datos bancarios._`;
+
+            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+        }
+
+        renderReservationsTable();
+    </script>
+</body>
+</html>
