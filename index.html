@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Departamento en Alquiler - Tonsupa | Conjunto Salaberry V</title>
+    <title>Departamento en Alquiler - Tonsupa | Conjunto Salaverry 3</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -60,7 +60,7 @@
                 </div>
                 <div>
                     <span class="font-extrabold text-base sm:text-lg tracking-tight text-brand-navy block leading-tight">
-                        Salaberry V <span class="text-brand-orange">Tonsupa</span>
+                        Salaverry 3 <span class="text-brand-orange">Tonsupa</span>
                     </span>
                     <span class="text-[10px] text-slate-500 font-semibold">Playa • Ecuador</span>
                 </div>
@@ -739,5 +739,68 @@
 
         renderReservationsTable();
     </script>
+    <!-- FOOTER DEL SITIO WEB -->
+    <footer class="bg-brand-navy text-white border-t-4 border-brand-orange mt-16 pt-12 pb-8">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-8">
+            
+            <!-- Columna 1: Info Departamento -->
+            <div class="md:col-span-4 space-y-3">
+                <div class="flex items-center gap-2">
+                    <div class="bg-brand-orange p-2 rounded-xl text-white">
+                        <i data-lucide="palmtree" class="w-5 h-5"></i>
+                    </div>
+                    <span class="font-extrabold text-lg text-white">
+                        Salaverry 3 <span class="text-brand-yellow">Tonsupa</span>
+                    </span>
+                </div>
+                <p class="text-slate-300 text-xs leading-relaxed font-medium">
+                    Departamento vacacional equipado para hasta 7 personas. Disfruta de piscina, WiFi, parqueadero privado y cercanía a la playa en el Sector Club Pacífico.
+                </p>
+                <div class="pt-2 text-xs space-y-1 text-slate-300 font-semibold">
+                    <p class="flex items-center gap-2">
+                        <i data-lucide="phone" class="w-4 h-4 text-brand-yellow"></i>
+                        <span>Contacto: 0983 209 484</span>
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-brand-yellow"></i>
+                        <span>Tonsupa, Esmeraldas - Ecuador</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Columna 2: Google Maps Embed -->
+            <div class="md:col-span-8">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-brand-yellow uppercase tracking-wider flex items-center gap-1.5">
+                        <i data-lucide="map" class="w-4 h-4"></i> Ubicación Exacta en Google Maps
+                    </span>
+                    <a href="https://maps.app.goo.gl/mpcshxfKF8P1RVMX8" target="_blank" class="text-[11px] text-slate-300 hover:text-brand-yellow underline font-semibold flex items-center gap-1">
+                        <span>Abrir en la app</span>
+                        <i data-lucide="external-link" class="w-3 h-3"></i>
+                    </a>
+                </div>
+                <!-- Google Maps Embed Frame -->
+                <div class="w-full h-48 sm:h-56 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-md">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.7561821898745!2d-79.80911!3d0.88722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e2b733ebc361955%3A0x280db51296e6ca08!2sConjunto%20Salaberry%203%2C%20Tonsupa!5e0!3m2!1ses!2sec!4v1700000000000!5m2!1ses!2sec" 
+                        class="w-full h-full border-0" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Línea de Separación y Créditos -->
+        <div class="max-w-6xl mx-auto px-4 mt-8 pt-6 border-t border-slate-700/60 flex flex-wrap items-center justify-between text-xs text-slate-400 font-medium gap-2">
+            <p>Todos los derechos © 2026 | Departamento Tonsupa</p>
+                <span>Website desarrollado por
+                <span class="font-extrabold text-brand-yellow">Ortíz Comunicaciones</span>
+            </p>
+        </div>
+    </footer>
+    
 </body>
 </html>
