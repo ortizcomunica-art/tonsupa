@@ -135,7 +135,7 @@
                         <div class="relative rounded-2xl overflow-hidden shadow-lg group bg-slate-900 h-72 sm:h-96">
                             <img id="carouselSlide" src="https://lh3.googleusercontent.com/d/1WkohIHRWrvmno27H2OZThvSwtxD6r1Qj" class="w-full h-full object-cover transition-all duration-700" alt="Departamento Tonsupa">
                             <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/40 to-transparent p-4 text-white">
-                                <p id="carouselCaption" class="font-bold text-sm sm:text-base text-brand-yellow">Fachada Principal y Piscina - Conjunto Salaberry 3</p>
+                                <p id="carouselCaption" class="font-bold text-sm sm:text-base text-brand-yellow">Fachada Principal y Piscina - Conjunto Salaverry 3</p>
                             </div>
                             <button onclick="manualPrevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 bg-brand-navy/80 hover:bg-brand-orange text-white p-2.5 rounded-full backdrop-blur-md transition shadow-md z-10">
                                 <i data-lucide="chevron-left" class="w-6 h-6"></i>
@@ -183,8 +183,8 @@
                     <div class="bg-white p-6 rounded-3xl border-2 border-brand-orange/30 shadow-xl sticky top-20">
                         <div class="bg-brand-navy text-white -mx-6 -mt-6 p-4 rounded-t-3xl mb-4 flex items-center justify-between">
                             <div>
-                                <span class="text-xs font-bold text-brand-yellow uppercase tracking-wider block">Reserva & Checkout</span>
-                                <h3 class="text-lg font-black">Formulario para reserva</h3>
+                                <span class="text-xs font-bold text-brand-yellow uppercase tracking-wider block">Checkout & Reserva</span>
+                                <h3 class="text-lg font-black">Consulta tu Estancia</h3>
                             </div>
                             <i data-lucide="credit-card" class="w-6 h-6 text-brand-yellow"></i>
                         </div>
@@ -213,11 +213,11 @@
                             <p id="dateError" class="text-[11px] font-bold text-rose-600 hidden"></p>
 
                             <div>
-                                <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">Huéspedes (Máx. 8)</label>
+                                <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">Huéspedes (Máx. 7)</label>
                                 <select id="guests" onchange="calculatePrice()" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800">
                                     <option value="1_3">1 a 3 personas ($65/noche)</option>
-                                    <option value="4_6">4 a 6 personas ($78/noche)</option>
-                                    <option value="7_8" selected>7 personas ($90/noche tope)</option>
+                                    <option value="4_5">4 a 5 personas ($78/noche)</option>
+                                    <option value="6_7" selected>6 a 7 personas ($90/noche tope)</option>
                                 </select>
                             </div>
 
@@ -437,7 +437,7 @@
     <script>
         lucide.createIcons();
 
-        // URL DE TU GOOGLE APPS SCRIPT
+        // URL DE GOOGLE APPS SCRIPT
         const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwIsSbOL-dCBb-Tdk-atUM96jX4YznXqWHXfiBWTM1JWQl7sjOQAjYi-1cmbhtixxFO/exec";
 
         const ADMIN_PASSWORD = "1234";
@@ -451,7 +451,7 @@
                 clientId: "1723456789",
                 checkin: "2026-09-04",
                 checkout: "2026-09-06",
-                guests: "7 a 8 personas",
+                guests: "6 a 7 personas",
                 promoCode: "ASESOR10",
                 paymentMethod: "Transferencia Bancaria",
                 amount: 191.00,
@@ -465,16 +465,28 @@
             localStorage.setItem('tonsupa_reservations_v2', JSON.stringify(reservationsStore));
         }
 
-        // ENVIAR A GOOGLE SHEETS
+        // FUNCIÓN CORREGIDA Y OPTIMIZADA PARA ENVIAR A GOOGLE SHEETS
         function sendToGoogleSheets(data) {
+            const formData = new FormData();
+            formData.append("clientName", data.clientName || "");
+            formData.append("clientId", data.clientId || "");
+            formData.append("checkin", data.checkin || "");
+            formData.append("checkout", data.checkout || "");
+            formData.append("guests", data.guests || "");
+            formData.append("promoCode", data.promoCode || "");
+            formData.append("paymentMethod", data.paymentMethod || "");
+            formData.append("amount", data.amount || 0);
+            formData.append("status", data.status || "Pendiente");
+
             fetch(GOOGLE_SHEETS_URL, {
                 method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
+                body: formData,
+                mode: "no-cors"
             }).then(() => {
-                console.log("Reserva registrada en Google Sheets con éxito.");
-            }).catch(err => console.error("Error al guardar en Google Sheets:", err));
+                console.log("Reserva enviada a Google Sheets correctamente.");
+            }).catch(err => {
+                console.error("Error al enviar a Google Sheets:", err);
+            });
         }
 
         function calculatePrice() {
@@ -485,7 +497,7 @@
 
             let baseRate = 90;
             if (guestGroup === '1_3') baseRate = 65;
-            if (guestGroup === '4_6') baseRate = 78;
+            if (guestGroup === '4_5') baseRate = 78;
 
             let nights = 1;
             if (checkinVal && checkoutVal) {
@@ -703,7 +715,7 @@
             saveToLocalStorage();
             sendToGoogleSheets(newRes);
 
-            alert("✅ Reserva registrada por Asesor. Se guardó en Google Sheets y en la tabla.");
+            alert("✅ Reserva registrada por Asesor y guardada en Google Sheets.");
             toggleAsesorModal();
             renderReservationsTable();
         }
@@ -735,7 +747,7 @@
 
         /* CARRUSEL Y CALENDARIO INTERACTIVO */
         const slides = [
-            { url: 'https://lh3.googleusercontent.com/d/1WkohIHRWrvmno27H2OZThvSwtxD6r1Qj', caption: 'Fachada Principal y Piscina - Conjunto Salaberry 3' },
+            { url: 'https://lh3.googleusercontent.com/d/1WkohIHRWrvmno27H2OZThvSwtxD6r1Qj', caption: 'Fachada Principal y Piscina - Conjunto Salaverry 3' },
             { url: 'https://lh3.googleusercontent.com/d/1xJ8uhe0eIF9YCFTPlDVhiY8qZvmWyRGF', caption: 'Dormitorio Master' },
             { url: 'https://lh3.googleusercontent.com/d/1eJSBN2p62ER-CpvBfk2LzfXBW-qaW6xQ', caption: 'Habitación Familiar' },
             { url: 'https://lh3.googleusercontent.com/d/1C4G7h_6uJPLEPEC1YcXS2osCGTlOir_H', caption: 'Cocina Equipada' }
@@ -887,12 +899,12 @@
             reservationsStore.push(newRes);
             saveToLocalStorage();
 
-            // ENVIAR A GOOGLE SHEETS
+            // ENVÍO A GOOGLE SHEETS
             sendToGoogleSheets(newRes);
 
             let message = `🏖️ *SOLICITUD DE RESERVA VACACIONAL*%0A`;
             message += `-----------------------------------%0A`;
-            message += `🏠 *Lugar:* Depto. Tonsupa (Salaberry 3)%0A`;
+            message += `🏠 *Lugar:* Depto. Tonsupa (Salaverry 3)%0A`;
             message += `👤 *Huésped:* ${name}%0A`;
             message += `🪪 *C.I/Pasaporte:* ${id}%0A`;
             message += `📅 *Llegada:* ${checkin}%0A`;
