@@ -41,7 +41,7 @@
             <span>¡TUS VACACIONES SOÑADAS EN TONSUPA! • SECTOR CLUB PACÍFICO</span>
         </div>
         <div class="flex gap-2">
-            <button onclick="toggleAsesorModal()" class="text-[11px] bg-brand-navy text-white font-bold px-2.5 py-1 rounded-lg hover:bg-slate-800 transition shrink-0 hidden sm:flex items-center gap-1">
+            <button onclick="promptAsesorLogin()" class="text-[11px] bg-brand-navy text-white font-bold px-2.5 py-1 rounded-lg hover:bg-slate-800 transition shrink-0 hidden sm:flex items-center gap-1">
                 <i data-lucide="briefcase" class="w-3 h-3 text-brand-yellow"></i> Portal Asesores
             </button>
             <button onclick="toggleAdminView()" class="text-[11px] bg-slate-900 text-white font-bold px-2.5 py-1 rounded-lg hover:bg-slate-800 transition shrink-0 hidden sm:flex items-center gap-1">
@@ -67,7 +67,7 @@
             </div>
             
             <div class="flex items-center gap-2">
-                <button onclick="toggleAsesorModal()" class="sm:hidden text-xs bg-brand-orange text-white font-bold px-2.5 py-1.5 rounded-lg">
+                <button onclick="promptAsesorLogin()" class="sm:hidden text-xs bg-brand-orange text-white font-bold px-2.5 py-1.5 rounded-lg">
                     Asesores
                 </button>
                 <button onclick="toggleAdminView()" class="sm:hidden text-xs bg-brand-navy text-white font-bold px-2.5 py-1.5 rounded-lg">
@@ -227,6 +227,7 @@
                                     <input type="text" id="promoCode" onkeyup="calculatePrice()" placeholder="Ej. ASESOR10" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-orange focus:outline-none text-xs font-bold text-brand-navy uppercase">
                                     <i data-lucide="tag" class="w-4 h-4 text-slate-400 absolute right-3 top-2.5"></i>
                                 </div>
+                                <p id="promoError" class="text-[10px] font-bold text-rose-500 mt-1 hidden">⚠️ Código de asesor no encontrado.</p>
                             </div>
 
                             <!-- RESUMEN AUTOMÁTICO DE COTIZACIÓN -->
@@ -299,33 +300,6 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN: GESTIÓN DE ASESORES (NUEVO) -->
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4">
-                    <h3 class="font-black text-brand-navy text-sm uppercase flex items-center gap-2">
-                        <i data-lucide="users" class="w-4 h-4 text-brand-orange"></i> Registrar / Gestionar Asesores Comerciales
-                    </h3>
-                    <form id="createAsesorForm" onsubmit="event.preventDefault(); saveNewAsesor();" class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
-                        <div>
-                            <label class="block font-bold text-slate-700 mb-1">Nombre Asesor</label>
-                            <input type="text" id="newAsesorName" required placeholder="Ej. Maria Lopez" class="w-full p-2 bg-white border rounded-xl font-semibold">
-                        </div>
-                        <div>
-                            <label class="block font-bold text-slate-700 mb-1">Código Único</label>
-                            <input type="text" id="newAsesorCode" required placeholder="Ej. MARIO10" class="w-full p-2 bg-white border rounded-xl font-bold uppercase">
-                        </div>
-                        <div>
-                            <label class="block font-bold text-slate-700 mb-1">% Descuento Asignado</label>
-                            <input type="number" id="newAsesorDiscount" required placeholder="Ej. 10" class="w-full p-2 bg-white border rounded-xl font-bold">
-                        </div>
-                        <div class="flex items-end">
-                            <button type="submit" class="w-full bg-brand-navy hover:bg-blue-900 text-white font-black py-2.5 rounded-xl uppercase shadow-sm">
-                                Guardar Asesor
-                            </button>
-                        </div>
-                    </form>
-                    <div id="asesoresListContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs"></div>
-                </div>
-
                 <!-- RESUMEN DE METAS DE ASESORES -->
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                     <h3 class="font-black text-brand-navy text-sm uppercase mb-3 flex items-center gap-2">
@@ -353,74 +327,51 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- SECCIÓN: GESTIÓN DE ASESORES (UBICADA AL FINAL) -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4">
+                    <h3 class="font-black text-brand-navy text-sm uppercase flex items-center gap-2">
+                        <i data-lucide="users" class="w-4 h-4 text-brand-orange"></i> Registrar / Gestionar Asesores Comerciales y Contraseñas
+                    </h3>
+                    <form id="createAsesorForm" onsubmit="event.preventDefault(); saveNewAsesor();" class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Nombre Asesor</label>
+                            <input type="text" id="newAsesorName" required placeholder="Ej. Maria Lopez" class="w-full p-2 bg-white border rounded-xl font-semibold">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Código Único</label>
+                            <input type="text" id="newAsesorCode" required placeholder="Ej. MARIA10" class="w-full p-2 bg-white border rounded-xl font-bold uppercase">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Contraseña Portal</label>
+                            <input type="text" id="newAsesorPass" required placeholder="Ej. clave123" class="w-full p-2 bg-white border rounded-xl font-semibold">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">% Descuento</label>
+                            <input type="number" id="newAsesorDiscount" required placeholder="Ej. 10" class="w-full p-2 bg-white border rounded-xl font-bold">
+                        </div>
+                        <div class="flex items-end">
+                            <button type="submit" class="w-full bg-brand-navy hover:bg-blue-900 text-white font-black py-2.5 rounded-xl uppercase shadow-sm">
+                                Guardar Asesor
+                            </button>
+                        </div>
+                    </form>
+                    <div id="asesoresListContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs"></div>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- FOOTER -->
-    <footer class="bg-brand-navy text-white border-t-4 border-brand-orange mt-16 pt-12 pb-8">
-        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-8">
-            <div class="md:col-span-4 space-y-3">
-                <div class="flex items-center gap-2">
-                    <div class="bg-brand-orange p-2 rounded-xl text-white">
-                        <i data-lucide="palmtree" class="w-5 h-5"></i>
-                    </div>
-                    <span class="font-extrabold text-lg text-white">
-                        Salaverry 3 <span class="text-brand-yellow">Tonsupa</span>
-                    </span>
-                </div>
-                <p class="text-slate-300 text-xs leading-relaxed font-medium">
-                    Departamento vacacional equipado para hasta 7 personas. Disfruta de piscina, WiFi, parqueadero privado y cercanía a la playa en el Sector Club Pacífico.
-                </p>
-                <div class="pt-2 text-xs space-y-1 text-slate-300 font-semibold">
-                    <p class="flex items-center gap-2">
-                        <i data-lucide="phone" class="w-4 h-4 text-brand-yellow"></i>
-                        <span>Contacto: 0983 209 484</span>
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <i data-lucide="map-pin" class="w-4 h-4 text-brand-yellow"></i>
-                        <span>Tonsupa, Esmeraldas - Ecuador</span>
-                    </p>
-                </div>
-            </div>
-            <div class="md:col-span-8">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-brand-yellow uppercase tracking-wider flex items-center gap-1.5">
-                        <i data-lucide="map" class="w-4 h-4"></i> Ubicación Exacta en Google Maps
-                    </span>
-                    <a href="https://maps.app.goo.gl/mpcshxfKF8P1RVMX8" target="_blank" class="text-[11px] text-slate-300 hover:text-brand-yellow underline font-semibold flex items-center gap-1">
-                        <span>Abrir en la app</span>
-                        <i data-lucide="external-link" class="w-3 h-3"></i>
-                    </a>
-                </div>
-                <div class="w-full h-48 sm:h-56 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-md">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.7561821898745!2d-79.80911!3d0.88722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e2b733ebc361955%3A0x280db51296e6ca08!2sConjunto%20Salaberry%203%2C%20Tonsupa!5e0!3m2!1ses!2sec!4v1700000000000!5m2!1ses!2sec" class="w-full h-full border-0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-            </div>
-        </div>
-        <div class="max-w-6xl mx-auto px-4 mt-8 pt-6 border-t border-slate-700/60 flex flex-wrap items-center justify-between text-xs text-slate-400 font-medium gap-2">
-            <p>Todos los derechos © 2026 | Departamento Tonsupa</p>
-            <p class="flex items-center gap-1">
-                <span>Website desarrollado por</span>
-                <span class="font-extrabold text-brand-yellow">Ortíz Comunicaciones</span>
-            </p>
-        </div>
-    </footer>
 
     <!-- MODAL DE ASESORES -->
     <div id="asesorModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 border-2 border-brand-orange">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="font-black text-brand-navy text-lg flex items-center gap-2">
-                    <i data-lucide="briefcase" class="w-5 h-5 text-brand-orange"></i> Portal Comercial para Asesores
+                    <i data-lucide="briefcase" class="w-5 h-5 text-brand-orange"></i> Portal Comercial para Asesores (<span id="modalAsesorTitle" class="text-brand-orange"></span>)
                 </h3>
                 <button onclick="toggleAsesorModal()" class="text-slate-400 hover:text-slate-700 font-bold text-sm">✕ Cerrar</button>
             </div>
             <form id="asesorForm" class="space-y-3" onsubmit="event.preventDefault(); submitAsesorBooking();">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Tu Código de Asesor</label>
-                    <input type="text" id="asCode" required placeholder="Ej. ASESOR10" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-bold uppercase">
-                </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Huésped / Cliente</label>
                     <input type="text" id="asName" required placeholder="Nombre y Apellido" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-semibold">
@@ -448,7 +399,7 @@
                     <input type="url" id="asReceipt" placeholder="https://enlace-imagen-transferencia.com" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-semibold">
                 </div>
                 <button type="submit" class="w-full bg-brand-orange text-white font-black py-3 rounded-xl text-xs uppercase shadow-md">
-                    Registrar Reserva
+                    Registrar Reserva de Asesor
                 </button>
             </form>
         </div>
@@ -461,12 +412,12 @@
         const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxLQDFUXClPOYfDRwDpG2637FtGgtg4JwoqzuJH833pgzxlVIG9yogh9SZCAMwHGh81/exec";
 
         const ADMIN_PASSWORD = "1234";
-        const ASESOR_PASSWORD = "ASESOR";
         let isAdminLoggedIn = false;
+        let currentLoggedAsesor = null;
 
         let reservationsStore = [];
         let asesoresStore = JSON.parse(localStorage.getItem('tonsupa_asesores')) || [
-            { name: "Juan Pérez", code: "ASESOR10", discount: 10 }
+            { name: "Juan Pérez", code: "ASESOR10", pass: "ASESOR", discount: 10 }
         ];
 
         function fetchReservationsFromCloud() {
@@ -548,7 +499,7 @@
                 sendToGoogleSheets(payload, () => {
                     res.amount = baseAmount;
                     renderReservationsTable();
-                    alert(`✅ Descuento aplicado. Nuevo Total: $${baseAmount.toFixed(2)}`);
+                    alert(`✅ Descuento de dueña aplicado en la misma fila. Nuevo Total: $${baseAmount.toFixed(2)}`);
                 });
             }
         }
@@ -556,9 +507,15 @@
         function saveNewAsesor() {
             const name = document.getElementById('newAsesorName').value.trim();
             const code = document.getElementById('newAsesorCode').value.trim().toUpperCase();
+            const pass = document.getElementById('newAsesorPass').value.trim();
             const discount = parseFloat(document.getElementById('newAsesorDiscount').value) || 0;
 
-            asesoresStore.push({ name, code, discount });
+            if(asesoresStore.some(a => a.code === code)) {
+                alert("❌ Este código de asesor ya existe.");
+                return;
+            }
+
+            asesoresStore.push({ name, code, pass, discount });
             localStorage.setItem('tonsupa_asesores', JSON.stringify(asesoresStore));
             document.getElementById('createAsesorForm').reset();
             renderAsesoresList();
@@ -586,7 +543,7 @@
                     <div class="bg-white p-3 rounded-xl border border-slate-200 flex justify-between items-center">
                         <div>
                             <div class="font-black text-brand-navy">${as.name}</div>
-                            <div class="text-[10px] text-slate-500">Código: <span class="text-brand-orange font-bold">${as.code}</span> | Desc: ${as.discount}%</div>
+                            <div class="text-[10px] text-slate-500">Cód: <span class="text-brand-orange font-bold">${as.code}</span> | Pass: ${as.pass} | Desc: ${as.discount}%</div>
                         </div>
                         <button onclick="deleteAsesor(${idx})" class="text-rose-500 hover:text-rose-700 font-bold p-1">✕</button>
                     </div>
@@ -599,7 +556,9 @@
             const checkinVal = document.getElementById('checkin').value;
             const checkoutVal = document.getElementById('checkout').value;
             const guestGroup = document.getElementById('guests').value;
-            const promoCode = document.getElementById('promoCode').value.trim().toUpperCase();
+            const promoCodeInput = document.getElementById('promoCode');
+            const promoCode = promoCodeInput.value.trim().toUpperCase();
+            const promoError = document.getElementById('promoError');
 
             let baseRate = 90;
             if (guestGroup.includes("1 a 3")) baseRate = 65;
@@ -616,13 +575,18 @@
             let subtotal = baseRate * nights;
             let discountPercent = 0;
 
-            if (promoCode.length > 0) {
-                discountPercent += 0.05;
+            if (promoCode.length > 0 && promoCode !== "DIRECTO") {
                 const foundAsesor = asesoresStore.find(a => a.code === promoCode);
                 if (foundAsesor) {
-                    discountPercent += (foundAsesor.discount / 100);
+                    promoError.classList.add('hidden');
+                    discountPercent += 0.05 + (foundAsesor.discount / 100);
+                } else {
+                    promoError.classList.remove('hidden');
                 }
+            } else {
+                promoError.classList.add('hidden');
             }
+
             if (nights > 4) discountPercent += 0.05;
 
             let discountAmount = subtotal * discountPercent;
@@ -772,32 +736,40 @@
                 publicDiv.classList.add('hidden');
                 adminDiv.classList.remove('hidden');
                 btnText.innerText = "Ver Web";
-                fetchReservationsFromCloud(); // Sincronización automática inmediata al entrar al panel
+                fetchReservationsFromCloud();
                 renderAsesoresList();
             } else {
                 adminDiv.classList.add('hidden');
                 publicDiv.classList.remove('hidden');
                 btnText.innerText = "Panel Dueña";
-                fetchReservationsFromCloud(); // Sincronización automática al volver a la vista web pública
+                fetchReservationsFromCloud();
+            }
+        }
+
+        function promptAsesorLogin() {
+            const codeInput = prompt("Ingresa tu Código de Asesor:");
+            if (!codeInput) return;
+            const passInput = prompt("Ingresa tu Contraseña de Asesor:");
+            if (!passInput) return;
+
+            const found = asesoresStore.find(a => a.code === codeInput.trim().toUpperCase() && a.pass === passInput.trim());
+            if (found) {
+                currentLoggedAsesor = found;
+                document.getElementById('modalAsesorTitle').innerText = found.name;
+                document.getElementById('asesorModal').classList.remove('hidden');
+            } else {
+                alert("❌ Código de asesor o contraseña incorrectos.");
             }
         }
 
         function toggleAsesorModal() {
             const modal = document.getElementById('asesorModal');
-            if (modal.classList.contains('hidden')) {
-                const pass = prompt("Clave de acceso para Asesores:");
-                if (pass === ASESOR_PASSWORD) {
-                    modal.classList.remove('hidden');
-                } else if (pass !== null) {
-                    alert("Clave inválida de Asesor.");
-                }
-            } else {
-                modal.classList.add('hidden');
-            }
+            modal.classList.toggle('hidden');
         }
 
         function submitAsesorBooking() {
-            const code = document.getElementById('asCode').value.trim().toUpperCase();
+            if (!currentLoggedAsesor) return;
+
             const name = document.getElementById('asName').value;
             const checkin = document.getElementById('asCheckin').value;
             const checkout = document.getElementById('asCheckout').value;
@@ -815,11 +787,11 @@
 
             const newRes = {
                 clientName: name + (isFreeNight ? " (CANJE NOCHE GRATIS)" : ""),
-                clientId: "Cargado por Asesor",
+                clientId: "Cargado por Asesor (" + currentLoggedAsesor.name + ")",
                 checkin: checkin,
                 checkout: checkout,
                 guests: `${nights} noche/s (Asesor)`,
-                promoCode: code,
+                promoCode: currentLoggedAsesor.code,
                 paymentMethod: "Transferencia / Depósito",
                 amount: amount,
                 status: "Pendiente"
@@ -993,12 +965,22 @@
                 return;
             }
 
+            const promoCodeInput = document.getElementById('promoCode').value.trim().toUpperCase();
+            if (promoCodeInput && promoCodeInput !== "DIRECTO") {
+                const exists = asesoresStore.some(a => a.code === promoCodeInput);
+                if (!exists) {
+                    alert("⚠️ Código de asesor no válido o no encontrado en la base de datos.");
+                    document.getElementById('promoError').classList.remove('hidden');
+                    return;
+                }
+            }
+
             const name = document.getElementById('clientName').value;
             const id = document.getElementById('clientId').value;
             const checkin = document.getElementById('checkin').value;
             const checkout = document.getElementById('checkout').value;
             const guests = document.getElementById('guests').options[document.getElementById('guests').selectedIndex].text;
-            const promoCode = document.getElementById('promoCode').value.trim().toUpperCase() || "DIRECTO";
+            const promoCode = promoCodeInput || "DIRECTO";
             const payment = document.querySelector('input[name="paymentMethod"]:checked').value;
             const totalText = document.getElementById('summaryTotal').innerText;
             const phone = "593983209484";
@@ -1024,7 +1006,7 @@
 
             sendToGoogleSheets(newRes);
 
-            let message = `🏖️ *SOLICITUD DE RESERVA VACACIONAL*%0A`;
+            let message = `🏖️️ *SOLICITUD DE RESERVA VACACIONAL*%0A`;
             message += `-----------------------------------%0A`;
             message += `🏠 *Lugar:* Depto. Tonsupa (Salaverry 3)%0A`;
             message += `👤 *Huésped:* ${name}%0A`;
