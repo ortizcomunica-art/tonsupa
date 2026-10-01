@@ -275,14 +275,14 @@
 
         <!-- VISTA PRIVADA: PANEL DE LA DUEÑA -->
         <div id="adminView" class="hidden max-w-6xl mx-auto px-4 py-8">
-            <div class="bg-white rounded-3xl border-2 border-brand-navy shadow-2xl p-6 sm:p-8">
+            <div class="bg-white rounded-3xl border-2 border-brand-navy shadow-2xl p-6 sm:p-8 space-y-8">
                 <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-6">
                     <div>
                         <span class="bg-brand-orange/10 text-brand-orange text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
                             Panel Exclusivo
                         </span>
                         <h2 class="text-2xl sm:text-3xl font-black text-brand-navy mt-1 flex items-center gap-2">
-                            <i data-lucide="layout-dashboard" class="w-7 h-7 text-brand-orange"></i> Control de Reservas y Metas de Asesores
+                            <i data-lucide="layout-dashboard" class="w-7 h-7 text-brand-orange"></i> Control de Reservas y Gestión de Asesores
                         </h2>
                     </div>
                     
@@ -299,8 +299,35 @@
                     </div>
                 </div>
 
+                <!-- SECCIÓN: GESTIÓN DE ASESORES (NUEVO) -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4">
+                    <h3 class="font-black text-brand-navy text-sm uppercase flex items-center gap-2">
+                        <i data-lucide="users" class="w-4 h-4 text-brand-orange"></i> Registrar / Gestionar Asesores Comerciales
+                    </h3>
+                    <form id="createAsesorForm" onsubmit="event.preventDefault(); saveNewAsesor();" class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Nombre Asesor</label>
+                            <input type="text" id="newAsesorName" required placeholder="Ej. Maria Lopez" class="w-full p-2 bg-white border rounded-xl font-semibold">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Código Único</label>
+                            <input type="text" id="newAsesorCode" required placeholder="Ej. MARIO10" class="w-full p-2 bg-white border rounded-xl font-bold uppercase">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">% Descuento Asignado</label>
+                            <input type="number" id="newAsesorDiscount" required placeholder="Ej. 10" class="w-full p-2 bg-white border rounded-xl font-bold">
+                        </div>
+                        <div class="flex items-end">
+                            <button type="submit" class="w-full bg-brand-navy hover:bg-blue-900 text-white font-black py-2.5 rounded-xl uppercase shadow-sm">
+                                Guardar Asesor
+                            </button>
+                        </div>
+                    </form>
+                    <div id="asesoresListContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs"></div>
+                </div>
+
                 <!-- RESUMEN DE METAS DE ASESORES -->
-                <div class="my-6 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                     <h3 class="font-black text-brand-navy text-sm uppercase mb-3 flex items-center gap-2">
                         <i data-lucide="award" class="w-4 h-4 text-brand-orange"></i> Rendimiento de Asesores (Meta: 6 Noches = 1 Noche Gratis)
                     </h3>
@@ -315,13 +342,14 @@
                                 <th class="p-3.5">Huésped / CI</th>
                                 <th class="p-3.5">Fechas</th>
                                 <th class="p-3.5">Asesor</th>
-                                <th class="p-3.5">Pago / Total</th>
+                                <th class="p-3.5">Pago / Total ($)</th>
+                                <th class="p-3.5">Descuento Dueña</th>
                                 <th class="p-3.5">Estado</th>
-                                <th class="p-3.5 text-center">Acciones (Aprobar / Rechazar)</th>
+                                <th class="p-3.5 text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="reservationsTableBody" class="divide-y divide-slate-200 font-semibold text-slate-700 bg-white">
-                            <tr><td colspan="6" class="p-6 text-center text-slate-400">Cargando reservas desde Google Sheets...</td></tr>
+                            <tr><td colspan="7" class="p-6 text-center text-slate-400">Cargando reservas desde Google Sheets...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -437,6 +465,9 @@
         let isAdminLoggedIn = false;
 
         let reservationsStore = [];
+        let asesoresStore = JSON.parse(localStorage.getItem('tonsupa_asesores')) || [
+            { name: "Juan Pérez", code: "ASESOR10", discount: 10 }
+        ];
 
         function fetchReservationsFromCloud() {
             fetch(GOOGLE_SHEETS_URL)
@@ -451,13 +482,13 @@
                         syncCalendarWithReservations();
                     } else {
                         console.error("Los datos recibidos no son un array:", data);
-                        document.getElementById('reservationsTableBody').innerHTML = `<tr><td colspan="6" class="p-6 text-center text-rose-500 font-bold">Error en el formato de datos de Google Sheets.</td></tr>`;
+                        document.getElementById('reservationsTableBody').innerHTML = `<tr><td colspan="7" class="p-6 text-center text-rose-500 font-bold">Error en formato de datos.</td></tr>`;
                         renderCalendar();
                     }
                 })
                 .catch(err => {
                     console.error("Error al cargar reservas de la nube:", err);
-                    document.getElementById('reservationsTableBody').innerHTML = `<tr><td colspan="6" class="p-6 text-center text-amber-600 font-bold">No se pudieron cargar las reservas. Haz clic en 'Actualizar Datos'.</td></tr>`;
+                    document.getElementById('reservationsTableBody').innerHTML = `<tr><td colspan="7" class="p-6 text-center text-amber-600 font-bold">No se pudieron cargar las reservas. Haz clic en 'Actualizar Datos'.</td></tr>`;
                     renderCalendar();
                 });
         }
@@ -499,6 +530,71 @@
             });
         }
 
+        function applyAdminDiscount(rowIndex) {
+            const discountInput = document.getElementById(`discount_${rowIndex}`);
+            const customDiscount = parseFloat(discountInput.value) || 0;
+            const res = reservationsStore.find(r => r.rowIndex === rowIndex);
+            
+            if (res) {
+                let baseAmount = parseFloat(res.amount) - customDiscount;
+                if (baseAmount < 20) baseAmount = 20; // Mínimo costo de limpieza
+
+                const payload = {
+                    action: "updateAmount",
+                    rowIndex: rowIndex,
+                    amount: baseAmount
+                };
+
+                sendToGoogleSheets(payload, () => {
+                    res.amount = baseAmount;
+                    renderReservationsTable();
+                    alert(`✅ Descuento aplicado. Nuevo Total: $${baseAmount.toFixed(2)}`);
+                });
+            }
+        }
+
+        function saveNewAsesor() {
+            const name = document.getElementById('newAsesorName').value.trim();
+            const code = document.getElementById('newAsesorCode').value.trim().toUpperCase();
+            const discount = parseFloat(document.getElementById('newAsesorDiscount').value) || 0;
+
+            asesoresStore.push({ name, code, discount });
+            localStorage.setItem('tonsupa_asesores', JSON.stringify(asesoresStore));
+            document.getElementById('createAsesorForm').reset();
+            renderAsesoresList();
+            alert(`✅ Asesor ${name} registrado correctamente.`);
+        }
+
+        function deleteAsesor(index) {
+            asesoresStore.splice(index, 1);
+            localStorage.setItem('tonsupa_asesores', JSON.stringify(asesoresStore));
+            renderAsesoresList();
+        }
+
+        function renderAsesoresList() {
+            const container = document.getElementById('asesoresListContainer');
+            if (!container) return;
+
+            if (asesoresStore.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 italic col-span-3">No hay asesores creados todavía.</p>';
+                return;
+            }
+
+            let html = '';
+            asesoresStore.forEach((as, idx) => {
+                html += `
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 flex justify-between items-center">
+                        <div>
+                            <div class="font-black text-brand-navy">${as.name}</div>
+                            <div class="text-[10px] text-slate-500">Código: <span class="text-brand-orange font-bold">${as.code}</span> | Desc: ${as.discount}%</div>
+                        </div>
+                        <button onclick="deleteAsesor(${idx})" class="text-rose-500 hover:text-rose-700 font-bold p-1">✕</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
         function calculatePrice() {
             const checkinVal = document.getElementById('checkin').value;
             const checkoutVal = document.getElementById('checkout').value;
@@ -520,7 +616,13 @@
             let subtotal = baseRate * nights;
             let discountPercent = 0;
 
-            if (promoCode.length > 0) discountPercent += 0.05;
+            if (promoCode.length > 0) {
+                discountPercent += 0.05;
+                const foundAsesor = asesoresStore.find(a => a.code === promoCode);
+                if (foundAsesor) {
+                    discountPercent += (foundAsesor.discount / 100);
+                }
+            }
             if (nights > 4) discountPercent += 0.05;
 
             let discountAmount = subtotal * discountPercent;
@@ -539,7 +641,7 @@
             let asesorNightsCounter = {};
 
             if (reservationsStore.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">No hay reservas registradas en el sistema.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">No hay reservas registradas en el sistema.</td></tr>`;
                 document.getElementById('asesoresMetricsList').innerHTML = '<p class="text-slate-400 italic col-span-3">No hay datos de asesores aún.</p>';
                 return;
             }
@@ -552,14 +654,14 @@
                     nights = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
                 }
 
-                if (res.status === 'Aprobado' && res.promoCode && res.promoCode !== 'DIRECTO') {
+                if (res.status && res.status.trim().toLowerCase() === 'aprobado' && res.promoCode && res.promoCode !== 'DIRECTO') {
                     const code = res.promoCode;
                     asesorNightsCounter[code] = (asesorNightsCounter[code] || 0) + nights;
                 }
 
                 let badgeColor = "bg-amber-100 text-amber-800 border-amber-300";
-                if (res.status === 'Aprobado') badgeColor = "bg-emerald-100 text-emerald-800 border-emerald-300";
-                if (res.status === 'Rechazado') badgeColor = "bg-rose-100 text-rose-800 border-rose-300";
+                if (res.status && res.status.trim().toLowerCase() === 'aprobado') badgeColor = "bg-emerald-100 text-emerald-800 border-emerald-300";
+                if (res.status && res.status.trim().toLowerCase() === 'rechazado') badgeColor = "bg-rose-100 text-rose-800 border-rose-300";
 
                 html += `
                     <tr class="hover:bg-slate-50 transition">
@@ -579,8 +681,14 @@
                             <div class="text-[10px] text-slate-500">${res.paymentMethod || 'Transferencia'}</div>
                         </td>
                         <td class="p-3.5">
+                            <div class="flex items-center gap-1">
+                                <input type="number" id="discount_${res.rowIndex}" placeholder="0" class="w-16 p-1 border rounded-lg text-xs font-bold" />
+                                <button onclick="applyAdminDiscount(${res.rowIndex})" class="bg-brand-orange text-white font-bold px-2 py-1 rounded-lg text-[10px]">Aplicar</button>
+                            </div>
+                        </td>
+                        <td class="p-3.5">
                             <span class="border px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${badgeColor}">
-                                ${res.status}
+                                ${res.status || 'Pendiente'}
                             </span>
                         </td>
                         <td class="p-3.5 text-center">
@@ -664,11 +772,13 @@
                 publicDiv.classList.add('hidden');
                 adminDiv.classList.remove('hidden');
                 btnText.innerText = "Ver Web";
-                fetchReservationsFromCloud();
+                fetchReservationsFromCloud(); // Sincronización automática inmediata al entrar al panel
+                renderAsesoresList();
             } else {
                 adminDiv.classList.add('hidden');
                 publicDiv.classList.remove('hidden');
                 btnText.innerText = "Panel Dueña";
+                fetchReservationsFromCloud(); // Sincronización automática al volver a la vista web pública
             }
         }
 
@@ -726,7 +836,6 @@
             bookedDatesStore = {};
 
             reservationsStore.forEach(res => {
-                // MEJORA: Solo bloquea fechas si el estado es EXPLICITAMENTE 'Aprobado'
                 if (res.status && res.status.trim().toLowerCase() === 'aprobado' && res.checkin && res.checkout) {
                     const [inYear, inMonth, inDay] = res.checkin.split('-').map(Number);
                     const [outYear, outMonth, outDay] = res.checkout.split('-').map(Number);
@@ -879,9 +988,8 @@
         }
 
         function sendWhatsApp() {
-            // MEJORA CRÍTICA: Validación de seguridad previa al envío para evitar doble reserva
             if (!validateDates()) {
-                alert("⚠️ Las fechas seleccionadas contienen días ocupados. Por favor, selecciona otro rango.");
+                alert("⚠️️ Las fechas seleccionadas contienen días ocupados. Por favor, selecciona otro rango.");
                 return;
             }
 
@@ -933,7 +1041,7 @@
             window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
         }
 
-        // Cargar reservas iniciales y renderizar calendario al arrancar
+        // Cargar reservas iniciales al arrancar la página
         fetchReservationsFromCloud();
     </script>
 </body>
