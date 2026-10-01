@@ -68,7 +68,7 @@
             
             <div class="flex items-center gap-2">
                 <button onclick="toggleAsesorModal()" class="sm:hidden text-xs bg-brand-orange text-white font-bold px-2.5 py-1.5 rounded-lg">
-                    Asesores
+                    Briefcase
                 </button>
                 <button onclick="toggleAdminView()" class="sm:hidden text-xs bg-brand-navy text-white font-bold px-2.5 py-1.5 rounded-lg">
                     🔒 Admin
@@ -178,7 +178,7 @@
                     </div>
                 </div>
 
-                <!-- FORMULARIO CHECKOUT CON FORMSPREE -->
+                <!-- FORMULARIO CHECKOUT CON CÁLCULO DINÁMICO DE TARIFAS -->
                 <div class="lg:col-span-1">
                     <div class="bg-white p-6 rounded-3xl border-2 border-brand-orange/30 shadow-xl sticky top-20">
                         <div class="bg-brand-navy text-white -mx-6 -mt-6 p-4 rounded-t-3xl mb-4 flex items-center justify-between">
@@ -192,29 +192,29 @@
                         <form id="bookingForm" class="space-y-4" onsubmit="event.preventDefault(); sendWhatsApp();">
                             <div>
                                 <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">Nombre Completo</label>
-                                <input type="text" id="clientName" name="clientName" required placeholder="Ej. Carlos Mendoza" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:outline-none text-sm font-semibold text-slate-800">
+                                <input type="text" id="clientName" required placeholder="Ej. Carlos Mendoza" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:outline-none text-sm font-semibold text-slate-800">
                             </div>
 
                             <div>
                                 <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">Cédula o Pasaporte</label>
-                                <input type="text" id="clientId" name="clientId" required placeholder="Ej. 1723456789" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:outline-none text-sm font-semibold text-slate-800">
+                                <input type="text" id="clientId" required placeholder="Ej. 1723456789" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:outline-none text-sm font-semibold text-slate-800">
                             </div>
 
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-700 mb-1">Fecha Entrada</label>
-                                    <input type="date" id="checkin" name="checkin" required onchange="calculatePrice()" class="w-full px-2 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800">
+                                    <input type="date" id="checkin" required onchange="calculatePrice()" class="w-full px-2 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800">
                                 </div>
                                 <div>
                                     <label class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-700 mb-1">Fecha Salida</label>
-                                    <input type="date" id="checkout" name="checkout" required onchange="calculatePrice()" class="w-full px-2 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800">
+                                    <input type="date" id="checkout" required onchange="calculatePrice()" class="w-full px-2 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800">
                                 </div>
                             </div>
                             <p id="dateError" class="text-[11px] font-bold text-rose-600 hidden"></p>
 
                             <div>
                                 <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">Huéspedes (Máx. 7)</label>
-                                <select id="guests" name="guests" onchange="calculatePrice()" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800">
+                                <select id="guests" onchange="calculatePrice()" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800">
                                     <option value="1_3">1 a 3 personas ($65/noche)</option>
                                     <option value="4_5">4 a 5 personas ($78/noche)</option>
                                     <option value="6_7" selected>6 a 7 personas ($90/noche tope)</option>
@@ -224,7 +224,7 @@
                             <div>
                                 <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">Código de Asesor / Descuento</label>
                                 <div class="relative">
-                                    <input type="text" id="promoCode" name="promoCode" onkeyup="calculatePrice()" placeholder="Ej. ASESOR10" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-orange focus:outline-none text-xs font-bold text-brand-navy uppercase">
+                                    <input type="text" id="promoCode" onkeyup="calculatePrice()" placeholder="Ej. ASESOR10" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-orange focus:outline-none text-xs font-bold text-brand-navy uppercase">
                                     <i data-lucide="tag" class="w-4 h-4 text-slate-400 absolute right-3 top-2.5"></i>
                                 </div>
                             </div>
@@ -437,67 +437,58 @@
     <script>
         lucide.createIcons();
 
-        // 1. ENDPOINT PARA ENVÍO CON FORMSPREE
-        const FORMSPREE_URL = "https://formspree.io/f/xkjgeedd";
-        
-        // 2. ENDPOINT PARA CONSULTAR LA HOJA DE GOOGLE SHEETS
-        const GOOGLE_SHEET_GET_URL = "TU_URL_DE_GOOGLE_APPS_SCRIPT_AQUI";
+        // URL DE GOOGLE APPS SCRIPT ACTUALIZADA
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzxTXlW7SQeNhmzVJ69irX-cP4TMO33IMZKErxY6a25peqbCecOmfJgsLKStBT_sO63/exec";
 
         const ADMIN_PASSWORD = "1234";
         const ASESOR_PASSWORD = "ASESOR";
         let isAdminLoggedIn = false;
 
-        let reservationsStore = [];
-
-        // Consulta en tiempo real las reservas desde Google Sheets
-        function fetchCloudReservations() {
-            if (!GOOGLE_SHEET_GET_URL || GOOGLE_SHEET_GET_URL.includes("TU_URL")) {
-                console.warn("⚠️ Falta colocar la URL de lectura de Google Apps Script en la variable GOOGLE_SHEET_GET_URL.");
-                return;
+        let reservationsStore = JSON.parse(localStorage.getItem('tonsupa_reservations_v2')) || [
+            {
+                id: 1,
+                clientName: "Carlos Mendoza",
+                clientId: "1723456789",
+                checkin: "2026-09-04",
+                checkout: "2026-09-06",
+                guests: "6 a 7 personas",
+                promoCode: "ASESOR10",
+                paymentMethod: "Transferencia Bancaria",
+                amount: 191.00,
+                receiptUrl: "https://lh3.googleusercontent.com/d/1ANysBZ7r4XpnJdrSLBOuLPq6BxcgCgNb",
+                status: "Aprobado",
+                nights: 2
             }
+        ];
 
-            fetch(GOOGLE_SHEET_GET_URL)
-                .then(res => res.json())
-                .then(data => {
-                    if (Array.isArray(data)) {
-                        reservationsStore = data;
-                        renderReservationsTable();
-                    }
-                })
-                .catch(err => console.error("Error al obtener reservas globales:", err));
+        function saveToLocalStorage() {
+            localStorage.setItem('tonsupa_reservations_v2', JSON.stringify(reservationsStore));
         }
 
-        function sendToFormspree(data) {
-            fetch(FORMSPREE_URL, {
+        // FUNCIÓN OPTIMIZADA PARA ENVIAR A GOOGLE SHEETS
+        function sendToGoogleSheets(data) {
+            const payload = new URLSearchParams();
+            payload.append("clientName", data.clientName || "");
+            payload.append("clientId", data.clientId || "");
+            payload.append("checkin", data.checkin || "");
+            payload.append("checkout", data.checkout || "");
+            payload.append("guests", data.guests || "");
+            payload.append("promoCode", data.promoCode || "");
+            payload.append("paymentMethod", data.paymentMethod || "");
+            payload.append("amount", data.amount || 0);
+            payload.append("status", data.status || "Pendiente");
+
+            fetch(GOOGLE_SHEETS_URL, {
                 method: "POST",
+                mode: "no-cors",
                 headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Content-Type": "application/x-www-form-urlencoded"
                 },
-                body: JSON.stringify({
-                    "Cliente": data.clientName,
-                    "Cedula_Pasaporte": data.clientId,
-                    "Fecha_Checkin": data.checkin,
-                    "Fecha_Checkout": data.checkout,
-                    "Noches": data.nights || 1,
-                    "Huespedes": data.guests || "Sin especificar",
-                    "Codigo_Asesor": data.promoCode || "DIRECTO",
-                    "Metodo_Pago": data.paymentMethod,
-                    "Monto_Total": `$${data.amount}`,
-                    "Estado": data.status || "Pendiente",
-                    "Comprobante_URL": data.receiptUrl || "N/A"
-                })
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log("✅ Datos enviados exitosamente a Formspree.");
-                    setTimeout(fetchCloudReservations, 3000);
-                } else {
-                    console.error("❌ Error enviando a Formspree.");
-                }
-            })
-            .catch(err => {
-                console.error("❌ Error de red al conectar con Formspree:", err);
+                body: payload.toString()
+            }).then(() => {
+                console.log("Reserva enviada a Google Sheets correctamente.");
+            }).catch(err => {
+                console.error("Error al enviar a Google Sheets:", err);
             });
         }
 
@@ -543,7 +534,7 @@
             reservationsStore.forEach(res => {
                 if (res.status === 'Aprobado' && res.promoCode && res.promoCode !== 'DIRECTO') {
                     const code = res.promoCode;
-                    asesorNightsCounter[code] = (asesorNightsCounter[code] || 0) + (parseInt(res.nights) || 1);
+                    asesorNightsCounter[code] = (asesorNightsCounter[code] || 0) + (res.nights || 1);
                 }
 
                 let badgeColor = "bg-amber-100 text-amber-800 border-amber-300";
@@ -626,6 +617,7 @@
             const reservation = reservationsStore.find(r => r.id === resId);
             if (reservation) {
                 reservation.status = newStatus;
+                saveToLocalStorage();
                 renderReservationsTable();
             }
         }
@@ -666,7 +658,7 @@
                 publicDiv.classList.add('hidden');
                 adminDiv.classList.remove('hidden');
                 btnText.innerText = "Ver Web";
-                fetchCloudReservations();
+                renderReservationsTable();
             } else {
                 adminDiv.classList.add('hidden');
                 publicDiv.classList.remove('hidden');
@@ -723,9 +715,10 @@
             };
 
             reservationsStore.push(newRes);
-            sendToFormspree(newRes);
+            saveToLocalStorage();
+            sendToGoogleSheets(newRes);
 
-            alert("✅ Reserva registrada por Asesor y enviada.");
+            alert("✅ Reserva registrada por Asesor y enviada a Google Sheets.");
             toggleAsesorModal();
             renderReservationsTable();
         }
@@ -906,8 +899,11 @@
                 status: "Pendiente"
             };
 
-            // REGISTRAR EN FORMSPREE
-            sendToFormspree(newRes);
+            reservationsStore.push(newRes);
+            saveToLocalStorage();
+
+            // ENVÍO A GOOGLE SHEETS
+            sendToGoogleSheets(newRes);
 
             let message = `🏖️ *SOLICITUD DE RESERVA VACACIONAL*%0A`;
             message += `-----------------------------------%0A`;
@@ -917,7 +913,7 @@
             message += `📅 *Llegada:* ${checkin}%0A`;
             message += `📅 *Salida:* ${checkout} (${nights} noche/s)%0A`;
             message += `👥 *Huéspedes:* ${guests}%0A`;
-            message += `🏷️️ *Código Asesor:* ${promoCode}%0A`;
+            message += `🏷️ *Código Asesor:* ${promoCode}%0A`;
             message += `💵 *Valor Estimado:* ${totalText} (Incluye $20 Limpieza)%0A`;
             message += `💳 *Pago:* ${payment}%0A`;
             message += `-----------------------------------%0A`;
@@ -926,8 +922,7 @@
             window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
         }
 
-        // Obtener la información almacenada en Google Sheets al iniciar la página
-        fetchCloudReservations();
+        renderReservationsTable();
     </script>
 </body>
 </html>
