@@ -430,7 +430,8 @@
     <script>
         lucide.createIcons();
 
-        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzxTXlW7SQeNhmzVJ69irX-cP4TMO33IMZKErxY6a25peqbCecOmfJgsLKStBT_sO63/exec";
+        // URL DE LA NUEVA IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxLQDFUXClPOYfDRwDpG2637FtGgtg4JwoqzuJH833pgzxlVIG9yogh9SZCAMwHGh81/exec";
 
         const ADMIN_PASSWORD = "1234";
         const ASESOR_PASSWORD = "ASESOR";
@@ -441,16 +442,25 @@
         // Función para descargar las reservas directamente desde Google Sheets (Centralizado)
         function fetchReservationsFromCloud() {
             fetch(GOOGLE_SHEETS_URL)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) throw new Error("Error de red en la respuesta");
+                    return response.json();
+                })
                 .then(data => {
                     if (Array.isArray(data)) {
                         reservationsStore = data;
                         renderReservationsTable();
                         syncCalendarWithReservations();
+                    } else {
+                        console.error("Los datos recibidos no son un array:", data);
+                        document.getElementById('reservationsTableBody').innerHTML = `<tr><td colspan="6" class="p-6 text-center text-rose-500 font-bold">Error en el formato de datos de Google Sheets.</td></tr>`;
+                        renderCalendar();
                     }
                 })
                 .catch(err => {
                     console.error("Error al cargar reservas de la nube:", err);
+                    document.getElementById('reservationsTableBody').innerHTML = `<tr><td colspan="6" class="p-6 text-center text-amber-600 font-bold">No se pudieron cargar las reservas. Haz clic en 'Actualizar Datos'.</td></tr>`;
+                    renderCalendar();
                 });
         }
 
@@ -641,7 +651,7 @@
                 publicDiv.classList.add('hidden');
                 adminDiv.classList.remove('hidden');
                 btnText.innerText = "Ver Web";
-                fetchReservationsFromCloud(); // Carga las reservas directamente de la nube al abrir el panel
+                fetchReservationsFromCloud();
             } else {
                 adminDiv.classList.add('hidden');
                 publicDiv.classList.remove('hidden');
@@ -715,7 +725,7 @@
 
                     for (let d = checkinDate.getDate(); d <= checkoutDate.getDate(); d++) {
                         if (!bookedDatesStore[key].includes(d)) {
-                            bookedDatesStore[key].push(d);
+                            bookedDatesStore[key].includes(d) || bookedDatesStore[key].push(d);
                         }
                     }
                 }
@@ -892,7 +902,7 @@
             window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
         }
 
-        // Cargar las reservas al iniciar la página para poblar el calendario de ocupación globalmente
+        // Cargar las reservas al iniciar la página para poblar el calendario globalmente
         fetchReservationsFromCloud();
     </script>
 </body>
