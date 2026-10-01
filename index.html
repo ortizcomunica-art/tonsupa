@@ -121,7 +121,7 @@
                             <div class="absolute inset-0 bg-brand-navy/30 flex items-center justify-center group-hover:bg-brand-navy/10 transition">
                                 <div class="bg-brand-orange text-white p-4 rounded-full shadow-2xl transform group-hover:scale-110 transition flex items-center gap-2 px-6">
                                     <i data-lucide="play" class="w-6 h-6 fill-current"></i>
-                                    <span class="font-black text-xs uppercase tracking-wider">Ver Video en HD</span>
+                                    <span class="font-black text-xs uppercase tracking-wider">Ver Video</span>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
                             </h2>
                             <span class="text-xs font-bold text-slate-400">Rotación automática activada</span>
                         </div>
-                        <div class="relative rounded-2xl overflow-hidden shadow-lg group bg-slate-900 h-72 sm:h-96">
+                        <div class="relative rounded-2xl overflow-hidden shadow-lg group bg-slate-900 h-76 sm:h-96.5">
                             <img id="carouselSlide" src="https://lh3.googleusercontent.com/d/1WkohIHRWrvmno27H2OZThvSwtxD6r1Qj" class="w-full h-full object-cover transition-all duration-700" alt="Departamento Tonsupa">
                             <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/40 to-transparent p-4 text-white">
                                 <p id="carouselCaption" class="font-bold text-sm sm:text-base text-brand-yellow">Fachada Principal y Piscina - Conjunto Salaverry 3</p>
@@ -190,8 +190,8 @@
                     <div class="bg-white p-6 rounded-3xl border-2 border-brand-orange/30 shadow-xl sticky top-20">
                         <div class="bg-brand-navy text-white -mx-6 -mt-6 p-4 rounded-t-3xl mb-4 flex items-center justify-between">
                             <div>
-                                <span class="text-xs font-bold text-brand-yellow uppercase tracking-wider block">Checkout & Reserva</span>
-                                <h3 class="text-lg font-black">Consulta tu Estancia</h3>
+                                <span class="text-xs font-bold text-brand-yellow uppercase tracking-wider block">Reserva & Checkout</span>
+                                <h3 class="text-lg font-black">Formulario de Reserva</h3>
                             </div>
                             <i data-lucide="credit-card" class="w-6 h-6 text-brand-yellow"></i>
                         </div>
@@ -266,7 +266,7 @@
                                     </label>
                                     <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 flex items-center gap-2 hover:bg-slate-50">
                                         <input type="radio" name="paymentMethod" value="Tarjeta de Crédito/Débito" class="text-brand-blue">
-                                        <span class="text-xs font-bold text-slate-700">Tarjeta</span>
+                                        <span class="text-xs font-bold text-slate-700">Efectivo</span>
                                     </label>
                                 </div>
                             </div>
@@ -1038,10 +1038,17 @@
 
         /* CARRUSEL Y CALENDARIO INTERACTIVO */
         const slides = [
-            { url: 'https://lh3.googleusercontent.com/d/1WkohIHRWrvmno27H2OZThvSwtxD6r1Qj', caption: 'Fachada Principal y Piscina - Conjunto Salaverry 3' },
+            { url: 'https://lh3.googleusercontent.com/d/1pVVkbT9PstGOWFXNcrj50r9r7nzRu1TN', caption: 'Edificio Salaverry 3' },
+            { url: 'https://lh3.googleusercontent.com/d/1CCy484z4wMyhPUZ6Di1R0iMdhMphtLTZ', caption: 'Piscina 3' }, 
+            { url: 'https://lh3.googleusercontent.com/d/1WkohIHRWrvmno27H2OZThvSwtxD6r1Qj', caption: 'Balcón y Piscina' },
             { url: 'https://lh3.googleusercontent.com/d/1xJ8uhe0eIF9YCFTPlDVhiY8qZvmWyRGF', caption: 'Dormitorio Master' },
+            { url: 'https://lh3.googleusercontent.com/d/1WpR3LS8L3tC7MWf1SKn6aIdrO6yiKJ29', caption: 'Baño en Dormitorio Master' },
             { url: 'https://lh3.googleusercontent.com/d/1eJSBN2p62ER-CpvBfk2LzfXBW-qaW6xQ', caption: 'Habitación Familiar' },
-            { url: 'https://lh3.googleusercontent.com/d/1C4G7h_6uJPLEPEC1YcXS2osCGTlOir_H', caption: 'Cocina Equipada' }
+            { url: 'https://lh3.googleusercontent.com/d/1wCp-lTqX4MWvxkEcVqC0uKLoGCYaVIr0', caption: 'Baño social' },
+            { url: 'https://lh3.googleusercontent.com/d/1C4G7h_6uJPLEPEC1YcXS2osCGTlOir_H', caption: 'Cocina Equipada' },
+            { url: 'https://lh3.googleusercontent.com/d/1cp_2IjoZVj4njFsYqy-p8gpVDrdeisUf', caption: 'Comedor y sala' },
+            { url: 'https://lh3.googleusercontent.com/d/1Qg-t62YKKEMpl64HtcG46jTXpPEj0XAA', caption: 'Parqueadero' },
+            { url: 'https://lh3.googleusercontent.com/d/1pVVkbT9PstGOWFXNcrj50r9r7nzRu1TN', caption: 'Edificio Salaverry 3' }    
         ];
 
         let currentIndex = 0;
