@@ -115,13 +115,13 @@
                         </div>
                     </div>
                     <div class="lg:col-span-6">
-                        <!-- VIDEO CON PORTADA Y MÁXIMA CALIDAD -->
+                        <!-- VIDEO CON PORTADA Y MÁXIMA CALIDAD 1080P -->
                         <div id="videoContainer" class="relative w-full aspect-video rounded-3xl overflow-hidden bg-slate-900 border-2 border-brand-yellow/50 shadow-2xl cursor-pointer group" onclick="playHeaderVideo()">
-                            <!-- Portada del Video -->
                             <img id="videoPoster" src="https://lh3.googleusercontent.com/d/1WkohIHRWrvmno27H2OZThvSwtxD6r1Qj" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Portada Video Tonsupa">
                             <div class="absolute inset-0 bg-brand-navy/30 flex items-center justify-center group-hover:bg-brand-navy/10 transition">
-                                <div class="bg-brand-orange text-white p-4 rounded-full shadow-2xl transform group-hover:scale-110 transition">
-                                    <i data-lucide="play" class="w-8 h-8 fill-current"></i>
+                                <div class="bg-brand-orange text-white p-4 rounded-full shadow-2xl transform group-hover:scale-110 transition flex items-center gap-2 px-6">
+                                    <i data-lucide="play" class="w-6 h-6 fill-current"></i>
+                                    <span class="font-black text-xs uppercase tracking-wider">Ver Video en HD</span>
                                 </div>
                             </div>
                         </div>
@@ -234,7 +234,7 @@
                                     <input type="text" id="promoCode" onkeyup="calculatePrice()" placeholder="Ej. ASESOR10" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-orange focus:outline-none text-xs font-bold text-brand-navy uppercase">
                                     <i data-lucide="tag" class="w-4 h-4 text-slate-400 absolute right-3 top-2.5"></i>
                                 </div>
-                                <p id="promoError" class="text-[10px] font-bold text-rose-500 mt-1 hidden">⚠️️ Código de asesor no encontrado.</p>
+                                <p id="promoError" class="text-[10px] font-bold text-rose-500 mt-1 hidden">⚠️ Código de asesor no encontrado.</p>
                             </div>
 
                             <!-- RESUMEN AUTOMÁTICO DE COTIZACIÓN -->
@@ -369,49 +369,130 @@
         </div>
     </div>
 
-    <!-- MODAL DE ASESORES -->
-    <div id="asesorModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 border-2 border-brand-orange">
+    <!-- MODAL DE ASESORES (DASHBOARD PERSONALIZADO) -->
+    <div id="asesorModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl p-6 max-w-2xl w-full shadow-2xl space-y-6 border-2 border-brand-orange max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-black text-brand-navy text-lg flex items-center gap-2">
-                    <i data-lucide="briefcase" class="w-5 h-5 text-brand-orange"></i> Portal Comercial (<span id="modalAsesorTitle" class="text-brand-orange"></span>)
-                </h3>
+                <div>
+                    <span class="text-[10px] font-black uppercase text-brand-orange tracking-wider block">Portal Comercial Exclusivo</span>
+                    <h3 class="font-black text-brand-navy text-lg flex items-center gap-2">
+                        <i data-lucide="briefcase" class="w-5 h-5 text-brand-orange"></i> Asesor: <span id="modalAsesorTitle" class="text-brand-orange"></span>
+                    </h3>
+                </div>
                 <button onclick="toggleAsesorModal()" class="text-slate-400 hover:text-slate-700 font-bold text-sm">✕ Cerrar</button>
             </div>
-            <form id="asesorForm" class="space-y-3" onsubmit="event.preventDefault(); submitAsesorBooking();">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Huésped / Cliente</label>
-                    <input type="text" id="asName" required placeholder="Nombre y Apellido" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-semibold">
+
+            <!-- MÉTRICAS PERSONALES DEL ASESOR -->
+            <div id="asesorDashboardMetrics" class="bg-slate-50 p-4 rounded-2xl border border-slate-200"></div>
+
+            <!-- MIS RESERVAS REGISTRADAS -->
+            <div class="space-y-2">
+                <h4 class="font-black text-brand-navy text-xs uppercase">Mis Reservas Registradas</h4>
+                <div class="overflow-x-auto rounded-xl border border-slate-200 max-h-48 overflow-y-auto">
+                    <table class="w-full text-left text-[11px] bg-white">
+                        <thead class="bg-slate-100 text-slate-700 uppercase font-black">
+                            <tr>
+                                <th class="p-2.5">Cliente</th>
+                                <th class="p-2.5">Fechas</th>
+                                <th class="p-2.5">Total ($)</th>
+                                <th class="p-2.5">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="asesorMyReservationsBody" class="divide-y divide-slate-100 font-semibold"></tbody>
+                    </table>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
+            </div>
+
+            <!-- FORMULARIO PARA NUEVA RESERVA DE ASESOR -->
+            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl border border-brand-blue/30 space-y-3">
+                <h4 class="font-black text-brand-navy text-xs uppercase flex items-center gap-1.5">
+                    <i data-lucide="plus-circle" class="w-4 h-4 text-brand-orange"></i> Registrar Nueva Reserva con mi Código
+                </h4>
+                <form id="asesorForm" class="space-y-3" onsubmit="event.preventDefault(); submitAsesorBooking();">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-700 mb-1">Entrada</label>
-                        <input type="date" id="asCheckin" required onchange="validateAsesorDates()" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-semibold">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Huésped / Cliente</label>
+                        <input type="text" id="asName" required placeholder="Nombre y Apellido" class="w-full p-2 bg-white border rounded-xl text-xs font-semibold">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-700 mb-1">Entrada</label>
+                            <input type="date" id="asCheckin" required onchange="validateAsesorDates()" class="w-full p-2 bg-white border rounded-xl text-xs font-semibold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-700 mb-1">Salida</label>
+                            <input type="date" id="asCheckout" required onchange="validateAsesorDates()" class="w-full p-2 bg-white border rounded-xl text-xs font-semibold">
+                        </div>
+                    </div>
+                    <p id="asDateError" class="text-[11px] font-bold text-rose-600 hidden"></p>
+                    <div class="flex items-center gap-2 pt-1">
+                        <input type="checkbox" id="asIsFreeNight" class="w-4 h-4 text-brand-orange rounded">
+                        <label for="asIsFreeNight" class="text-xs font-extrabold text-brand-orange">¿Es canje de 1 Noche Gratis por Meta 6x1? ($20 limpieza)</label>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-700 mb-1">Salida</label>
-                        <input type="date" id="asCheckout" required onchange="validateAsesorDates()" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-semibold">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Monto Acordado ($)</label>
+                        <input type="number" id="asAmount" required placeholder="85.00" class="w-full p-2 bg-white border rounded-xl text-xs font-bold">
                     </div>
-                </div>
-                <p id="asDateError" class="text-[11px] font-bold text-rose-600 hidden"></p>
-                <div class="flex items-center gap-2 pt-1">
-                    <input type="checkbox" id="asIsFreeNight" class="w-4 h-4 text-brand-orange rounded">
-                    <label for="asIsFreeNight" class="text-xs font-extrabold text-brand-orange">¿Es canje de 1 Noche Gratis por Meta 6x1? ($20 limpieza)</label>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Monto Acordado ($)</label>
-                    <input type="number" id="asAmount" required placeholder="85.00" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-bold">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Link del Comprobante de Pago</label>
-                    <input type="url" id="asReceipt" placeholder="https://enlace-imagen-transferencia.com" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-semibold">
-                </div>
-                <button type="submit" id="btnAsesorSubmit" class="w-full bg-brand-orange text-white font-black py-3 rounded-xl text-xs uppercase shadow-md">
-                    Registrar Reserva de Asesor
-                </button>
-            </form>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Link del Comprobante de Pago</label>
+                        <input type="url" id="asReceipt" placeholder="https://enlace-imagen-transferencia.com" class="w-full p-2 bg-white border rounded-xl text-xs font-semibold">
+                    </div>
+                    <button type="submit" id="btnAsesorSubmit" class="w-full bg-brand-orange hover:bg-orange-600 text-white font-black py-3 rounded-xl text-xs uppercase shadow-md transition">
+                        Registrar y Enviar a Google Sheets
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-navy text-white border-t-4 border-brand-orange mt-16 pt-12 pb-8">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-8">
+            <div class="md:col-span-4 space-y-3">
+                <div class="flex items-center gap-2">
+                    <div class="bg-brand-orange p-2 rounded-xl text-white">
+                        <i data-lucide="palmtree" class="w-5 h-5"></i>
+                    </div>
+                    <span class="font-extrabold text-lg text-white">
+                        Salaverry 3 <span class="text-brand-yellow">Tonsupa</span>
+                    </span>
+                </div>
+                <p class="text-slate-300 text-xs leading-relaxed font-medium">
+                    Departamento vacacional equipado para hasta 7 personas. Disfruta de piscina, WiFi, parqueadero privado y cercanía a la playa en el Sector Club Pacífico.
+                </p>
+                <div class="pt-2 text-xs space-y-1 text-slate-300 font-semibold">
+                    <p class="flex items-center gap-2">
+                        <i data-lucide="phone" class="w-4 h-4 text-brand-yellow"></i>
+                        <span>Contacto: 0983 209 484</span>
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-brand-yellow"></i>
+                        <span>Tonsupa, Esmeraldas - Ecuador</span>
+                    </p>
+                </div>
+            </div>
+            <div class="md:col-span-8">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-brand-yellow uppercase tracking-wider flex items-center gap-1.5">
+                        <i data-lucide="map" class="w-4 h-4"></i> Ubicación Exacta en Google Maps
+                    </span>
+                    <a href="https://maps.app.goo.gl/mpcshxfKF8P1RVMX8" target="_blank" class="text-[11px] text-slate-300 hover:text-brand-yellow underline font-semibold flex items-center gap-1">
+                        <span>Abrir en la app</span>
+                        <i data-lucide="external-link" class="w-3 h-3"></i>
+                    </a>
+                </div>
+                <div class="w-full h-48 sm:h-56 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-md">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.7561821898745!2d-79.80911!3d0.88722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e2b733ebc361955%3A0x280db51296e6ca08!2sConjunto%20Salaberry%203%2C%20Tonsupa!5e0!3m2!1ses!2sec!4v1700000000000!5m2!1ses!2sec" class="w-full h-full border-0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto px-4 mt-8 pt-6 border-t border-slate-700/60 flex flex-wrap items-center justify-between text-xs text-slate-400 font-medium gap-2">
+            <p>Todos los derechos © 2026</p>
+            <p class="flex items-center gap-1">
+                <span>Website desarrollado por</span>
+                <span class="font-extrabold text-brand-yellow">Ortíz Comunicaciones</span>
+            </p>
+        </div>
+    </footer>
 
     <!-- Script Principal -->
     <script>
@@ -430,7 +511,8 @@
 
         function playHeaderVideo() {
             const container = document.getElementById('videoContainer');
-            container.innerHTML = `<iframe src="https://drive.google.com/file/d/1R5CScVxPN0yy-MpK2pItMzRVjrh8ItI-/preview?autoplay=1&muted=1&vq=hd1080" class="w-full h-full scale-105" allow="autoplay; encrypted-media"></iframe>`;
+            // Forzamos la máxima calidad (vq=hd1080)
+            container.innerHTML = `<iframe src="https://drive.google.com/file/d/1R5CScVxPN0yy-MpK2pItMzRVjrh8ItI-/preview?autoplay=1&muted=1&vq=hd1080&hd=1" class="w-full h-full scale-105" allow="autoplay; encrypted-media"></iframe>`;
         }
 
         function fetchReservationsFromCloud() {
@@ -768,16 +850,79 @@
             const found = asesoresStore.find(a => a.code === codeInput.trim().toUpperCase() && a.pass === passInput.trim());
             if (found) {
                 currentLoggedAsesor = found;
-                document.getElementById('modalAsesorTitle').innerText = found.name;
+                document.getElementById('modalAsesorTitle').innerText = found.name + " (" + found.code + ")";
+                renderAsesorDashboard();
                 document.getElementById('asesorModal').classList.remove('hidden');
             } else {
-                alert("❌ Código de asesor o contraseña incorrectos.");
+                alert("❌ Código de asesor o contraseña incorrectos. Inténtalo nuevamente.");
             }
         }
 
         function toggleAsesorModal() {
             const modal = document.getElementById('asesorModal');
             modal.classList.toggle('hidden');
+        }
+
+        function renderAsesorDashboard() {
+            if (!currentLoggedAsesor) return;
+
+            // 1. Filtrar reservas del asesor logueado
+            const myReservations = reservationsStore.filter(r => r.promoCode && r.promoCode.toUpperCase() === currentLoggedAsesor.code.toUpperCase());
+            
+            // 2. Calcular rendimiento
+            let totalNights = 0;
+            let myResHtml = '';
+
+            if (myReservations.length === 0) {
+                myResHtml = `<tr><td colspan="4" class="p-4 text-center text-slate-400">Aún no tienes reservas registradas con tu código.</td></tr>`;
+            } else {
+                myReservations.forEach(r => {
+                    let nights = 1;
+                    if (r.checkin && r.checkout) {
+                        const start = new Date(r.checkin + 'T00:00:00');
+                        const end = new Date(r.checkout + 'T00:00:00');
+                        nights = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+                    }
+                    if (r.status && r.status.trim().toLowerCase() === 'aprobado') {
+                        totalNights += nights;
+                    }
+
+                    let badgeColor = "bg-amber-100 text-amber-800";
+                    if (r.status && r.status.trim().toLowerCase() === 'aprobado') badgeColor = "bg-emerald-100 text-emerald-800";
+                    if (r.status && r.status.trim().toLowerCase() === 'rechazado') badgeColor = "bg-rose-100 text-rose-800";
+
+                    myResHtml += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-2.5 font-bold">${r.clientName}</td>
+                            <td class="p-2.5 text-slate-600">${r.checkin} al ${r.checkout}</td>
+                            <td class="p-2.5 font-extrabold">$${parseFloat(r.amount || 0).toFixed(2)}</td>
+                            <td class="p-2.5"><span class="px-2 py-0.5 rounded-full uppercase font-black text-[9px] ${badgeColor}">${r.status || 'Pendiente'}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+            document.getElementById('asesorMyReservationsBody').innerHTML = myResHtml;
+
+            // 3. Renderizar métricas en el modal
+            const freeNights = Math.floor(totalNights / 6);
+            const progress = totalNights % 6;
+            const metricsContainer = document.getElementById('asesorDashboardMetrics');
+            metricsContainer.innerHTML = `
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-black text-brand-navy uppercase">Tus Noches Vendidas (Aprobadas):</span>
+                        <div class="text-lg font-black text-brand-orange">${totalNights} Noches</div>
+                    </div>
+                    <div>
+                        <span class="text-xs font-black text-brand-navy uppercase">Progreso Meta 6x1:</span>
+                        <div class="text-sm font-bold text-emerald-700">${progress} / 6 Noches</div>
+                    </div>
+                    <div>
+                        <span class="text-xs font-black text-brand-navy uppercase">🎁 Noches Gratis Ganadas:</span>
+                        <div class="text-sm font-black text-brand-navy">${freeNights} Canjeables</div>
+                    </div>
+                </div>
+            `;
         }
 
         function validateAsesorDates() {
