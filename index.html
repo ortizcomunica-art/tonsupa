@@ -115,7 +115,7 @@
                         </div>
                     </div>
                     <div class="lg:col-span-6">
-                        <!-- VIDEO CORREGIDO CON REPRODUCCIÓN AUTOMÁTICA -->
+                        <!-- VIDEO REPRODUCCIÓN AUTOMÁTICA -->
                         <div class="relative w-full aspect-video rounded-3xl overflow-hidden bg-slate-900 border-2 border-brand-yellow/50 shadow-2xl">
                             <iframe src="https://drive.google.com/file/d/1R5CScVxPN0yy-MpK2pItMzRVjrh8ItI-/preview?autoplay=1&muted=1" class="w-full h-full scale-105" allow="autoplay; encrypted-media"></iframe>
                         </div>
@@ -492,7 +492,6 @@
             };
 
             sendToGoogleSheets(payload, () => {
-                // Actualizar localmente y refrescar vista y calendario de inmediato
                 const res = reservationsStore.find(r => r.rowIndex === rowIndex);
                 if (res) res.status = newStatus;
                 renderReservationsTable();
@@ -729,7 +728,6 @@
 
             reservationsStore.forEach(res => {
                 if (res.status === 'Aprobado' && res.checkin && res.checkout) {
-                    // Usar desglose seguro de fechas UTC para evitar desfases de zona horaria
                     const [inYear, inMonth, inDay] = res.checkin.split('-').map(Number);
                     const [outYear, outMonth, outDay] = res.checkout.split('-').map(Number);
 
@@ -826,8 +824,10 @@
             if (daysContainer) daysContainer.innerHTML = htmlDays;
 
             const todayFormatted = new Date().toISOString().split('T')[0];
-            if (document.getElementById('checkin')) document.getElementById('checkin'].min = todayFormatted;
-            if (document.getElementById('checkout')) document.getElementById('checkout'].min = todayFormatted;
+            const checkinEl = document.getElementById('checkin');
+            const checkoutEl = document.getElementById('checkout');
+            if (checkinEl) checkinEl.min = todayFormatted;
+            if (checkoutEl) checkoutEl.min = todayFormatted;
         }
 
         function changeMonth(direction) {
@@ -857,11 +857,6 @@
                 btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
                 return;
             }
-
-            const inYear = checkinDate.getFullYear();
-            const inMonth = checkinDate.getMonth();
-            const outYear = checkoutDate.getFullYear();
-            const outMonth = checkoutDate.getMonth();
 
             let curr = new Date(checkinDate);
             while (curr < checkoutDate) {
