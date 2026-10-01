@@ -14,12 +14,12 @@
                 extend: {
                     colors: {
                         brand: {
-                            navy: '#023E7D',    /* Azul Marino */
-                            blue: '#0077B6',    /* Azul Océano */
+                            navy: '#023E7D',
+                            blue: '#0077B6',
                             lightBlue: '#E8F1F5',
-                            orange: '#FF7B00',  /* Naranja */
-                            yellow: '#FFD166',  /* Amarillo CTA */
-                            green: '#25D366'    /* WhatsApp */
+                            orange: '#FF7B00',
+                            yellow: '#FFD166',
+                            green: '#25D366'
                         }
                     }
                 }
@@ -115,8 +115,9 @@
                         </div>
                     </div>
                     <div class="lg:col-span-6">
-                        <div class="relative w-full aspect-video rounded-3xl overflow-hidden bg-slate-900 border-2 border-brand-yellow/50 shadow-2xl pointer-events-none">
-                            <iframe src="https://drive.google.com/file/d/1R5CScVxPN0yy-MpK2pItMzRVjrh8ItI-/preview?autoplay=1" class="w-full h-full scale-105 pointer-events-none" allow="autoplay"></iframe>
+                        <!-- VIDEO CORREGIDO CON REPRODUCCIÓN AUTOMÁTICA -->
+                        <div class="relative w-full aspect-video rounded-3xl overflow-hidden bg-slate-900 border-2 border-brand-yellow/50 shadow-2xl">
+                            <iframe src="https://drive.google.com/file/d/1R5CScVxPN0yy-MpK2pItMzRVjrh8ItI-/preview?autoplay=1&muted=1" class="w-full h-full scale-105" allow="autoplay; encrypted-media"></iframe>
                         </div>
                     </div>
                 </div>
@@ -317,7 +318,7 @@
                                 <th class="p-3.5">Asesor</th>
                                 <th class="p-3.5">Pago / Total</th>
                                 <th class="p-3.5">Estado</th>
-                                <th class="p-3.5 text-center">Acciones</th>
+                                <th class="p-3.5 text-center">Acciones (Aprobar / Rechazar)</th>
                             </tr>
                         </thead>
                         <tbody id="reservationsTableBody" class="divide-y divide-slate-200 font-semibold text-slate-700 bg-white">
@@ -430,7 +431,6 @@
     <script>
         lucide.createIcons();
 
-        // URL DE LA NUEVA IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT
         const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxLQDFUXClPOYfDRwDpG2637FtGgtg4JwoqzuJH833pgzxlVIG9yogh9SZCAMwHGh81/exec";
 
         const ADMIN_PASSWORD = "1234";
@@ -439,7 +439,6 @@
 
         let reservationsStore = [];
 
-        // Función para descargar las reservas directamente desde Google Sheets (Centralizado)
         function fetchReservationsFromCloud() {
             fetch(GOOGLE_SHEETS_URL)
                 .then(response => {
@@ -466,15 +465,9 @@
 
         function sendToGoogleSheets(data, callback) {
             const payload = new URLSearchParams();
-            payload.append("clientName", data.clientName || "");
-            payload.append("clientId", data.clientId || "");
-            payload.append("checkin", data.checkin || "");
-            payload.append("checkout", data.checkout || "");
-            payload.append("guests", data.guests || "");
-            payload.append("promoCode", data.promoCode || "");
-            payload.append("paymentMethod", data.paymentMethod || "");
-            payload.append("amount", data.amount || 0);
-            payload.append("status", data.status || "Pendiente");
+            for (const key in data) {
+                payload.append(key, data[key]);
+            }
 
             fetch(GOOGLE_SHEETS_URL, {
                 method: "POST",
@@ -484,10 +477,27 @@
                 },
                 body: payload.toString()
             }).then(() => {
-                console.log("Reserva enviada exitosamente a Google Sheets.");
+                console.log("Acción enviada a Google Sheets.");
                 if (callback) callback();
             }).catch(err => {
                 console.error("Error al enviar a Google Sheets:", err);
+            });
+        }
+
+        function updateReservationStatus(rowIndex, newStatus) {
+            const payload = {
+                action: "updateStatus",
+                rowIndex: rowIndex,
+                status: newStatus
+            };
+
+            sendToGoogleSheets(payload, () => {
+                // Actualizar localmente y refrescar vista y calendario de inmediato
+                const res = reservationsStore.find(r => r.rowIndex === rowIndex);
+                if (res) res.status = newStatus;
+                renderReservationsTable();
+                syncCalendarWithReservations();
+                alert(`✅ Reserva cambiada a estado: ${newStatus}`);
             });
         }
 
@@ -538,7 +548,7 @@
 
             reservationsStore.forEach(res => {
                 let nights = parseInt(res.nights) || 1;
-                if (res.checkin && res.checkout && !res.nights) {
+                if (res.checkin && res.checkout) {
                     const start = new Date(res.checkin + 'T00:00:00');
                     const end = new Date(res.checkout + 'T00:00:00');
                     nights = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
@@ -577,7 +587,12 @@
                         </td>
                         <td class="p-3.5 text-center">
                             <div class="flex items-center justify-center gap-1.5">
-                                <span class="text-[10px] text-slate-400 italic">Gestionar en Google Sheet</span>
+                                <button onclick="updateReservationStatus(${res.rowIndex}, 'Aprobado')" title="Aprobar" class="bg-emerald-600 hover:bg-emerald-700 text-white p-1.5 rounded-lg transition shadow-sm">
+                                    <i data-lucide="check" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="updateReservationStatus(${res.rowIndex}, 'Rechazado')" title="Rechazar" class="bg-rose-600 hover:bg-rose-700 text-white p-1.5 rounded-lg transition shadow-sm">
+                                    <i data-lucide="x" class="w-4 h-4"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -713,20 +728,25 @@
             bookedDatesStore = {};
 
             reservationsStore.forEach(res => {
-                if (res.status === 'Aprobado') {
-                    const checkinDate = new Date(res.checkin + 'T00:00:00');
-                    const checkoutDate = new Date(res.checkout + 'T00:00:00');
+                if (res.status === 'Aprobado' && res.checkin && res.checkout) {
+                    // Usar desglose seguro de fechas UTC para evitar desfases de zona horaria
+                    const [inYear, inMonth, inDay] = res.checkin.split('-').map(Number);
+                    const [outYear, outMonth, outDay] = res.checkout.split('-').map(Number);
 
-                    const year = checkinDate.getFullYear();
-                    const month = checkinDate.getMonth();
-                    const key = `${year}-${month}`;
+                    let currentDate = new Date(inYear, inMonth - 1, inDay);
+                    const endDate = new Date(outYear, outMonth - 1, outDay);
 
-                    if (!bookedDatesStore[key]) bookedDatesStore[key] = [];
+                    while (currentDate < endDate) {
+                        const year = currentDate.getFullYear();
+                        const month = currentDate.getMonth();
+                        const day = currentDate.getDate();
+                        const key = `${year}-${month}`;
 
-                    for (let d = checkinDate.getDate(); d <= checkoutDate.getDate(); d++) {
-                        if (!bookedDatesStore[key].includes(d)) {
-                            bookedDatesStore[key].includes(d) || bookedDatesStore[key].push(d);
+                        if (!bookedDatesStore[key]) bookedDatesStore[key] = [];
+                        if (!bookedDatesStore[key].includes(day)) {
+                            bookedDatesStore[key].push(day);
                         }
+                        currentDate.setDate(currentDate.getDate() + 1);
                     }
                 }
             });
@@ -806,8 +826,8 @@
             if (daysContainer) daysContainer.innerHTML = htmlDays;
 
             const todayFormatted = new Date().toISOString().split('T')[0];
-            if (document.getElementById('checkin')) document.getElementById('checkin').min = todayFormatted;
-            if (document.getElementById('checkout')) document.getElementById('checkout').min = todayFormatted;
+            if (document.getElementById('checkin')) document.getElementById('checkin'].min = todayFormatted;
+            if (document.getElementById('checkout')) document.getElementById('checkout'].min = todayFormatted;
         }
 
         function changeMonth(direction) {
@@ -838,10 +858,19 @@
                 return;
             }
 
-            const key = `${checkinDate.getFullYear()}-${checkinDate.getMonth()}`;
-            const bookedForMonth = bookedDatesStore[key] || [];
+            const inYear = checkinDate.getFullYear();
+            const inMonth = checkinDate.getMonth();
+            const outYear = checkoutDate.getFullYear();
+            const outMonth = checkoutDate.getMonth();
 
-            for (let d = checkinDate.getDate(); d <= checkoutDate.getDate(); d++) {
+            let curr = new Date(checkinDate);
+            while (curr < checkoutDate) {
+                const y = curr.getFullYear();
+                const m = curr.getMonth();
+                const d = curr.getDate();
+                const key = `${y}-${m}`;
+                const bookedForMonth = bookedDatesStore[key] || [];
+
                 if (bookedForMonth.includes(d)) {
                     errorEl.innerText = `❌ El día ${d} está ocupado. Elige otro rango de fechas.`;
                     errorEl.classList.remove('hidden');
@@ -849,6 +878,7 @@
                     btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
                     return;
                 }
+                curr.setDate(curr.getDate() + 1);
             }
         }
 
@@ -882,7 +912,6 @@
                 status: "Pendiente"
             };
 
-            // Envía la reserva directamente al Google Sheet desde cualquier dispositivo o cuenta
             sendToGoogleSheets(newRes);
 
             let message = `🏖️ *SOLICITUD DE RESERVA VACACIONAL*%0A`;
@@ -902,7 +931,7 @@
             window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
         }
 
-        // Cargar las reservas al iniciar la página para poblar el calendario globalmente
+        // Cargar reservas iniciales y renderizar calendario al arrancar
         fetchReservationsFromCloud();
     </script>
 </body>
