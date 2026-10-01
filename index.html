@@ -437,8 +437,8 @@
     <script>
         lucide.createIcons();
 
-        // URL DE GOOGLE APPS SCRIPT
-        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwIsSbOL-dCBb-Tdk-atUM96jX4YznXqWHXfiBWTM1JWQl7sjOQAjYi-1cmbhtixxFO/exec";
+        // URL DE GOOGLE APPS SCRIPT ACTUALIZADA
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzxTXlW7SQeNhmzVJ69irX-cP4TMO33IMZKErxY6a25peqbCecOmfJgsLKStBT_sO63/exec";
 
         const ADMIN_PASSWORD = "1234";
         const ASESOR_PASSWORD = "ASESOR";
@@ -465,23 +465,26 @@
             localStorage.setItem('tonsupa_reservations_v2', JSON.stringify(reservationsStore));
         }
 
-        // FUNCIÓN CORREGIDA Y OPTIMIZADA PARA ENVIAR A GOOGLE SHEETS
+        // FUNCIÓN OPTIMIZADA PARA ENVIAR A GOOGLE SHEETS
         function sendToGoogleSheets(data) {
-            const formData = new FormData();
-            formData.append("clientName", data.clientName || "");
-            formData.append("clientId", data.clientId || "");
-            formData.append("checkin", data.checkin || "");
-            formData.append("checkout", data.checkout || "");
-            formData.append("guests", data.guests || "");
-            formData.append("promoCode", data.promoCode || "");
-            formData.append("paymentMethod", data.paymentMethod || "");
-            formData.append("amount", data.amount || 0);
-            formData.append("status", data.status || "Pendiente");
+            const payload = new URLSearchParams();
+            payload.append("clientName", data.clientName || "");
+            payload.append("clientId", data.clientId || "");
+            payload.append("checkin", data.checkin || "");
+            payload.append("checkout", data.checkout || "");
+            payload.append("guests", data.guests || "");
+            payload.append("promoCode", data.promoCode || "");
+            payload.append("paymentMethod", data.paymentMethod || "");
+            payload.append("amount", data.amount || 0);
+            payload.append("status", data.status || "Pendiente");
 
             fetch(GOOGLE_SHEETS_URL, {
                 method: "POST",
-                body: formData,
-                mode: "no-cors"
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: payload.toString()
             }).then(() => {
                 console.log("Reserva enviada a Google Sheets correctamente.");
             }).catch(err => {
@@ -715,7 +718,7 @@
             saveToLocalStorage();
             sendToGoogleSheets(newRes);
 
-            alert("✅ Reserva registrada por Asesor y guardada en Google Sheets.");
+            alert("✅ Reserva registrada por Asesor y enviada a Google Sheets.");
             toggleAsesorModal();
             renderReservationsTable();
         }
