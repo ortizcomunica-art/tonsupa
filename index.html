@@ -68,7 +68,7 @@
             
             <div class="flex items-center gap-2">
                 <button onclick="toggleAsesorModal()" class="sm:hidden text-xs bg-brand-orange text-white font-bold px-2.5 py-1.5 rounded-lg">
-                    Briefcase
+                    Asesores
                 </button>
                 <button onclick="toggleAdminView()" class="sm:hidden text-xs bg-brand-navy text-white font-bold px-2.5 py-1.5 rounded-lg">
                     🔒 Admin
@@ -178,7 +178,7 @@
                     </div>
                 </div>
 
-                <!-- FORMULARIO CHECKOUT CON CÁLCULO DINÁMICO DE TARIFAS -->
+                <!-- FORMULARIO CHECKOUT -->
                 <div class="lg:col-span-1">
                     <div class="bg-white p-6 rounded-3xl border-2 border-brand-orange/30 shadow-xl sticky top-20">
                         <div class="bg-brand-navy text-white -mx-6 -mt-6 p-4 rounded-t-3xl mb-4 flex items-center justify-between">
@@ -215,9 +215,9 @@
                             <div>
                                 <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">Huéspedes (Máx. 7)</label>
                                 <select id="guests" onchange="calculatePrice()" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800">
-                                    <option value="1_3">1 a 3 personas ($65/noche)</option>
-                                    <option value="4_5">4 a 5 personas ($78/noche)</option>
-                                    <option value="6_7" selected>6 a 7 personas ($90/noche tope)</option>
+                                    <option value="1 a 3 personas ($65/noche)">1 a 3 personas ($65/noche)</option>
+                                    <option value="4 a 5 personas ($78/noche)">4 a 5 personas ($78/noche)</option>
+                                    <option value="6 a 7 personas ($90/noche tope)" selected>6 a 7 personas ($90/noche tope)</option>
                                 </select>
                             </div>
 
@@ -287,8 +287,11 @@
                     </div>
                     
                     <div class="flex items-center gap-2">
+                        <button onclick="fetchReservationsFromCloud()" class="bg-brand-blue hover:bg-sky-700 text-white font-extrabold px-4 py-2 rounded-xl text-xs flex items-center gap-2 transition shadow-md">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Actualizar Datos
+                        </button>
                         <button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-4 py-2 rounded-xl text-xs flex items-center gap-2 transition shadow-md">
-                            <i data-lucide="download" class="w-4 h-4"></i> Descargar Excel (CSV)
+                            <i data-lucide="download" class="w-4 h-4"></i> Descargar CSV
                         </button>
                         <button onclick="toggleAdminView()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold px-4 py-2 rounded-xl text-xs flex items-center gap-2 transition">
                             <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver a la Web
@@ -313,22 +316,22 @@
                                 <th class="p-3.5">Fechas</th>
                                 <th class="p-3.5">Asesor</th>
                                 <th class="p-3.5">Pago / Total</th>
-                                <th class="p-3.5">Comprobante</th>
                                 <th class="p-3.5">Estado</th>
                                 <th class="p-3.5 text-center">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="reservationsTableBody" class="divide-y divide-slate-200 font-semibold text-slate-700 bg-white"></tbody>
+                        <tbody id="reservationsTableBody" class="divide-y divide-slate-200 font-semibold text-slate-700 bg-white">
+                            <tr><td colspan="6" class="p-6 text-center text-slate-400">Cargando reservas desde Google Sheets...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- FOOTER DEL SITIO WEB CON MAPA EMBEBIDO -->
+    <!-- FOOTER -->
     <footer class="bg-brand-navy text-white border-t-4 border-brand-orange mt-16 pt-12 pb-8">
         <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-8">
-            
             <div class="md:col-span-4 space-y-3">
                 <div class="flex items-center gap-2">
                     <div class="bg-brand-orange p-2 rounded-xl text-white">
@@ -352,7 +355,6 @@
                     </p>
                 </div>
             </div>
-
             <div class="md:col-span-8">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-bold text-brand-yellow uppercase tracking-wider flex items-center gap-1.5">
@@ -364,18 +366,10 @@
                     </a>
                 </div>
                 <div class="w-full h-48 sm:h-56 rounded-2xl overflow-hidden border-2 border-slate-700 shadow-md">
-                    <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.7561821898745!2d-79.80911!3d0.88722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e2b733ebc361955%3A0x280db51296e6ca08!2sConjunto%20Salaberry%203%2C%20Tonsupa!5e0!3m2!1ses!2sec!4v1700000000000!5m2!1ses!2sec" 
-                        class="w-full h-full border-0" 
-                        allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.7561821898745!2d-79.80911!3d0.88722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e2b733ebc361955%3A0x280db51296e6ca08!2sConjunto%20Salaberry%203%2C%20Tonsupa!5e0!3m2!1ses!2sec!4v1700000000000!5m2!1ses!2sec" class="w-full h-full border-0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
-
         </div>
-
         <div class="max-w-6xl mx-auto px-4 mt-8 pt-6 border-t border-slate-700/60 flex flex-wrap items-center justify-between text-xs text-slate-400 font-medium gap-2">
             <p>Todos los derechos © 2026 | Departamento Tonsupa</p>
             <p class="flex items-center gap-1">
@@ -394,7 +388,6 @@
                 </h3>
                 <button onclick="toggleAsesorModal()" class="text-slate-400 hover:text-slate-700 font-bold text-sm">✕ Cerrar</button>
             </div>
-            
             <form id="asesorForm" class="space-y-3" onsubmit="event.preventDefault(); submitAsesorBooking();">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Tu Código de Asesor</label>
@@ -416,7 +409,7 @@
                 </div>
                 <div class="flex items-center gap-2 pt-1">
                     <input type="checkbox" id="asIsFreeNight" class="w-4 h-4 text-brand-orange rounded">
-                    <label for="asIsFreeNight" class="text-xs font-extrabold text-brand-orange">¿Es canje de 1 Noche Gratis por Meta 6x1? ($20 limpieza obligatorio)</label>
+                    <label for="asIsFreeNight" class="text-xs font-extrabold text-brand-orange">¿Es canje de 1 Noche Gratis por Meta 6x1? ($20 limpieza)</label>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Monto Acordado ($)</label>
@@ -437,36 +430,31 @@
     <script>
         lucide.createIcons();
 
-        // URL DE GOOGLE APPS SCRIPT ACTUALIZADA
         const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzxTXlW7SQeNhmzVJ69irX-cP4TMO33IMZKErxY6a25peqbCecOmfJgsLKStBT_sO63/exec";
 
         const ADMIN_PASSWORD = "1234";
         const ASESOR_PASSWORD = "ASESOR";
         let isAdminLoggedIn = false;
 
-        let reservationsStore = JSON.parse(localStorage.getItem('tonsupa_reservations_v2')) || [
-            {
-                id: 1,
-                clientName: "Carlos Mendoza",
-                clientId: "1723456789",
-                checkin: "2026-09-04",
-                checkout: "2026-09-06",
-                guests: "6 a 7 personas",
-                promoCode: "ASESOR10",
-                paymentMethod: "Transferencia Bancaria",
-                amount: 191.00,
-                receiptUrl: "https://lh3.googleusercontent.com/d/1ANysBZ7r4XpnJdrSLBOuLPq6BxcgCgNb",
-                status: "Aprobado",
-                nights: 2
-            }
-        ];
+        let reservationsStore = [];
 
-        function saveToLocalStorage() {
-            localStorage.setItem('tonsupa_reservations_v2', JSON.stringify(reservationsStore));
+        // Función para descargar las reservas directamente desde Google Sheets (Centralizado)
+        function fetchReservationsFromCloud() {
+            fetch(GOOGLE_SHEETS_URL)
+                .then(response => response.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        reservationsStore = data;
+                        renderReservationsTable();
+                        syncCalendarWithReservations();
+                    }
+                })
+                .catch(err => {
+                    console.error("Error al cargar reservas de la nube:", err);
+                });
         }
 
-        // FUNCIÓN OPTIMIZADA PARA ENVIAR A GOOGLE SHEETS
-        function sendToGoogleSheets(data) {
+        function sendToGoogleSheets(data, callback) {
             const payload = new URLSearchParams();
             payload.append("clientName", data.clientName || "");
             payload.append("clientId", data.clientId || "");
@@ -486,7 +474,8 @@
                 },
                 body: payload.toString()
             }).then(() => {
-                console.log("Reserva enviada a Google Sheets correctamente.");
+                console.log("Reserva enviada exitosamente a Google Sheets.");
+                if (callback) callback();
             }).catch(err => {
                 console.error("Error al enviar a Google Sheets:", err);
             });
@@ -499,8 +488,8 @@
             const promoCode = document.getElementById('promoCode').value.trim().toUpperCase();
 
             let baseRate = 90;
-            if (guestGroup === '1_3') baseRate = 65;
-            if (guestGroup === '4_5') baseRate = 78;
+            if (guestGroup.includes("1 a 3")) baseRate = 65;
+            if (guestGroup.includes("4 a 5")) baseRate = 78;
 
             let nights = 1;
             if (checkinVal && checkoutVal) {
@@ -531,10 +520,23 @@
             let html = '';
             let asesorNightsCounter = {};
 
+            if (reservationsStore.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">No hay reservas registradas en el sistema.</td></tr>`;
+                document.getElementById('asesoresMetricsList').innerHTML = '<p class="text-slate-400 italic col-span-3">No hay datos de asesores aún.</p>';
+                return;
+            }
+
             reservationsStore.forEach(res => {
+                let nights = parseInt(res.nights) || 1;
+                if (res.checkin && res.checkout && !res.nights) {
+                    const start = new Date(res.checkin + 'T00:00:00');
+                    const end = new Date(res.checkout + 'T00:00:00');
+                    nights = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+                }
+
                 if (res.status === 'Aprobado' && res.promoCode && res.promoCode !== 'DIRECTO') {
                     const code = res.promoCode;
-                    asesorNightsCounter[code] = (asesorNightsCounter[code] || 0) + (res.nights || 1);
+                    asesorNightsCounter[code] = (asesorNightsCounter[code] || 0) + nights;
                 }
 
                 let badgeColor = "bg-amber-100 text-amber-800 border-amber-300";
@@ -549,17 +551,14 @@
                         </td>
                         <td class="p-3.5 whitespace-nowrap">
                             <div class="text-brand-navy font-bold">${res.checkin}</div>
-                            <div class="text-[10px] text-slate-500">al ${res.checkout} (${res.nights || 1} noche/s)</div>
+                            <div class="text-[10px] text-slate-500">al ${res.checkout} (${nights} noche/s)</div>
                         </td>
                         <td class="p-3.5">
-                            <span class="bg-brand-navy/10 text-brand-navy px-2 py-0.5 rounded-md font-bold text-[10px]">${res.promoCode}</span>
+                            <span class="bg-brand-navy/10 text-brand-navy px-2 py-0.5 rounded-md font-bold text-[10px]">${res.promoCode || 'DIRECTO'}</span>
                         </td>
                         <td class="p-3.5">
-                            <div class="font-black text-slate-900">$${parseFloat(res.amount).toFixed(2)}</div>
-                            <div class="text-[10px] text-slate-500">${res.paymentMethod}</div>
-                        </td>
-                        <td class="p-3.5">
-                            ${res.receiptUrl && res.receiptUrl !== '#' ? `<a href="${res.receiptUrl}" target="_blank" class="inline-flex items-center gap-1 text-brand-blue hover:underline font-bold text-[11px]"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> Ver Recibo</a>` : '<span class="text-slate-400">Sin archivo</span>'}
+                            <div class="font-black text-slate-900">$${parseFloat(res.amount || 0).toFixed(2)}</div>
+                            <div class="text-[10px] text-slate-500">${res.paymentMethod || 'Transferencia'}</div>
                         </td>
                         <td class="p-3.5">
                             <span class="border px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${badgeColor}">
@@ -568,12 +567,7 @@
                         </td>
                         <td class="p-3.5 text-center">
                             <div class="flex items-center justify-center gap-1.5">
-                                <button onclick="updateReservationStatus(${res.id}, 'Aprobado')" title="Aprobar Pago" class="bg-emerald-600 hover:bg-emerald-700 text-white p-1.5 rounded-lg transition shadow-sm">
-                                    <i data-lucide="check" class="w-4 h-4"></i>
-                                </button>
-                                <button onclick="updateReservationStatus(${res.id}, 'Rechazado')" title="Denegar" class="bg-rose-600 hover:bg-rose-700 text-white p-1.5 rounded-lg transition shadow-sm">
-                                    <i data-lucide="x" class="w-4 h-4"></i>
-                                </button>
+                                <span class="text-[10px] text-slate-400 italic">Gestionar en Google Sheet</span>
                             </div>
                         </td>
                     </tr>
@@ -598,7 +592,7 @@
                                 <span class="text-brand-orange">${count} Noches Vendidas</span>
                             </div>
                             <div class="text-[11px] text-slate-600 mt-1">
-                                Progress meta: <span class="font-extrabold text-emerald-700">${progress}/6 noches</span>
+                                Progreso meta: <span class="font-extrabold text-emerald-700">${progress}/6 noches</span>
                             </div>
                             <div class="text-[11px] font-black text-emerald-800 mt-0.5">
                                 🎁 Noches Gratis Acumuladas: ${freeNightsEarned}
@@ -608,26 +602,15 @@
                 }
             }
             metricsContainer.innerHTML = metricsHtml;
-
             lucide.createIcons();
-            syncCalendarWithReservations();
-        }
-
-        function updateReservationStatus(resId, newStatus) {
-            const reservation = reservationsStore.find(r => r.id === resId);
-            if (reservation) {
-                reservation.status = newStatus;
-                saveToLocalStorage();
-                renderReservationsTable();
-            }
         }
 
         function exportToCSV() {
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "ID,Cliente,Cedula,Entrada,Salida,Noches,CodigoAsesor,MetodoPago,Monto,Estado\n";
+            csvContent += "FechaRegistro,Cliente,Cedula,Entrada,Salida,Huespedes,CodigoAsesor,MetodoPago,Monto,Estado\n";
 
             reservationsStore.forEach(r => {
-                csvContent += `${r.id},"${r.clientName}","${r.clientId}",${r.checkin},${r.checkout},${r.nights || 1},"${r.promoCode}","${r.paymentMethod}",${r.amount},${r.status}\n`;
+                csvContent += `"${r.fechaRegistro || ''}","${r.clientName}","${r.clientId}",${r.checkin},${r.checkout},"${r.guests}","${r.promoCode}","${r.paymentMethod}",${r.amount},${r.status}\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
@@ -658,7 +641,7 @@
                 publicDiv.classList.add('hidden');
                 adminDiv.classList.remove('hidden');
                 btnText.innerText = "Ver Web";
-                renderReservationsTable();
+                fetchReservationsFromCloud(); // Carga las reservas directamente de la nube al abrir el panel
             } else {
                 adminDiv.classList.add('hidden');
                 publicDiv.classList.remove('hidden');
@@ -687,7 +670,6 @@
             const checkout = document.getElementById('asCheckout').value;
             const isFreeNight = document.getElementById('asIsFreeNight').checked;
             let amount = parseFloat(document.getElementById('asAmount').value);
-            const receipt = document.getElementById('asReceipt').value || "#";
 
             let nights = 1;
             if (checkin && checkout) {
@@ -696,31 +678,25 @@
                 nights = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
             }
 
-            if (isFreeNight) {
-                amount = 20.00;
-            }
+            if (isFreeNight) amount = 20.00;
 
             const newRes = {
-                id: Date.now(),
                 clientName: name + (isFreeNight ? " (CANJE NOCHE GRATIS)" : ""),
                 clientId: "Cargado por Asesor",
                 checkin: checkin,
                 checkout: checkout,
-                nights: nights,
+                guests: `${nights} noche/s (Asesor)`,
                 promoCode: code,
                 paymentMethod: "Transferencia / Depósito",
                 amount: amount,
-                receiptUrl: receipt,
                 status: "Pendiente"
             };
 
-            reservationsStore.push(newRes);
-            saveToLocalStorage();
-            sendToGoogleSheets(newRes);
-
-            alert("✅ Reserva registrada por Asesor y enviada a Google Sheets.");
-            toggleAsesorModal();
-            renderReservationsTable();
+            sendToGoogleSheets(newRes, () => {
+                alert("✅ Reserva registrada por Asesor y guardada en el Google Sheet.");
+                toggleAsesorModal();
+                fetchReservationsFromCloud();
+            });
         }
 
         function syncCalendarWithReservations() {
@@ -885,24 +861,18 @@
             }
 
             const newRes = {
-                id: Date.now(),
                 clientName: name,
                 clientId: id,
                 checkin: checkin,
                 checkout: checkout,
-                nights: nights,
                 guests: guests,
                 promoCode: promoCode,
                 paymentMethod: payment,
                 amount: parseFloat(totalText.replace('$', '')),
-                receiptUrl: "#",
                 status: "Pendiente"
             };
 
-            reservationsStore.push(newRes);
-            saveToLocalStorage();
-
-            // ENVÍO A GOOGLE SHEETS
+            // Envía la reserva directamente al Google Sheet desde cualquier dispositivo o cuenta
             sendToGoogleSheets(newRes);
 
             let message = `🏖️ *SOLICITUD DE RESERVA VACACIONAL*%0A`;
@@ -922,7 +892,8 @@
             window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
         }
 
-        renderReservationsTable();
+        // Cargar las reservas al iniciar la página para poblar el calendario de ocupación globalmente
+        fetchReservationsFromCloud();
     </script>
 </body>
 </html>
