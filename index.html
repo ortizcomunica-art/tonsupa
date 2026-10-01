@@ -137,11 +137,11 @@
                             <h2 class="text-xl font-black text-brand-navy flex items-center gap-2">
                                 <i data-lucide="images" class="w-5 h-5 text-brand-orange"></i> Galería de Fotos Reales
                             </h2>
-                            <span class="text-xs font-bold text-slate-400">Rotación automática activada</span>
+                            <span class="text-xs font-bold text-slate-400">Haz clic en la foto para ampliar</span>
                         </div>
                         <div class="relative rounded-2xl overflow-hidden shadow-lg group bg-slate-900 h-76 sm:h-96">
-                            <img id="carouselSlide" src="https://lh3.googleusercontent.com/d/1WkohIHRWrvmno27H2OZThvSwtxD6r1Qj" class="w-full h-full object-cover transition-all duration-700" alt="Departamento Tonsupa">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/40 to-transparent p-4 text-white">
+                            <img id="carouselSlide" src="https://lh3.googleusercontent.com/d/1WkohIHRWrvmno27H2OZThvSwtxD6r1Qj" class="w-full h-full object-cover transition-all duration-700 cursor-pointer hover:opacity-95" alt="Departamento Tonsupa" onclick="openImageModal()" title="Haz clic para ver imagen completa">
+                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/40 to-transparent p-4 text-white pointer-events-none">
                                 <p id="carouselCaption" class="font-bold text-sm sm:text-base text-brand-yellow">Fachada Principal y Piscina - Conjunto Salaverry 3</p>
                             </div>
                             <button onclick="manualPrevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 bg-brand-navy/80 hover:bg-brand-orange text-white p-2.5 rounded-full backdrop-blur-md transition shadow-md z-10">
@@ -444,6 +444,16 @@
         </div>
     </div>
 
+    <!-- VENTANA POP-UP (MODAL) PARA VER IMAGEN GRANDE DEL CARRUSEL -->
+    <div id="imageModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center hidden p-4 cursor-pointer" onclick="closeImageModal()">
+        <div class="relative max-w-5xl max-h-[90vh] w-full flex items-center justify-center" onclick="event.stopPropagation()">
+            <button onclick="closeImageModal()" class="absolute -top-12 right-0 text-white hover:text-brand-yellow font-bold text-sm bg-slate-800/80 px-3 py-1.5 rounded-full border border-white/20 transition flex items-center gap-1 shadow-lg">
+                ✕ Cerrar
+            </button>
+            <img id="modalImage" src="" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl border-2 border-white/20 bg-slate-900">
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="bg-brand-navy text-white border-t-4 border-brand-orange mt-16 pt-12 pb-8">
         <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-8">
@@ -514,6 +524,24 @@
             const container = document.getElementById('videoContainer');
             // Reproducción en máxima resolución (1080p)
             container.innerHTML = `<iframe src="https://drive.google.com/file/d/1R5CScVxPN0yy-MpK2pItMzRVjrh8ItI-/preview?autoplay=1&muted=1&vq=hd1080&hd=1" class="w-full h-full scale-105" allow="autoplay; encrypted-media"></iframe>`;
+        }
+
+        // Funciones del Modal para ampliar imagen del carrusel
+        function openImageModal() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const currentImg = document.getElementById('carouselSlide');
+            if (modal && modalImg && currentImg) {
+                modalImg.src = currentImg.src;
+                modal.classList.remove('hidden');
+            }
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
         }
 
         function fetchReservationsFromCloud() {
@@ -1174,7 +1202,7 @@
 
         function sendWhatsApp() {
             if (!validateDates()) {
-                alert("⚠️ Las fechas seleccionadas contienen días ocupados. Por favor, selecciona otro rango.");
+                alert("⚠️️ Las fechas seleccionadas contienen días ocupados. Por favor, selecciona otro rango.");
                 return;
             }
 
@@ -1219,7 +1247,7 @@
 
             sendToGoogleSheets(newRes);
 
-            let message = `🏖️ *SOLICITUD DE RESERVA VACACIONAL*%0A`;
+            let message = `🏖️️ *SOLICITUD DE RESERVA VACACIONAL*%0A`;
             message += `-----------------------------------%0A`;
             message += `🏠 *Lugar:* Depto. Tonsupa (Salaverry 3)%0A`;
             message += `👤 *Huésped:* ${name}%0A`;
